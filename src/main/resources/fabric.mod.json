@@ -9,7 +9,7 @@
     ],
     "contact": {
         "homepage": "https://deftu.xyz/",
-        "issues": "https://github.com/Deftu/DeftuLib",
+        "issues": "https://github.com/Deftu/DeftuLib/issues",
         "sources": "https://github.com/Deftu/DeftuLib"
     },
     "license": "LGPL 3.0",

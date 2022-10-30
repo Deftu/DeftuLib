@@ -2,10 +2,6 @@ import groovy.lang.MissingPropertyException
 
 pluginManagement {
     repositories {
-        // Default repositories
-        gradlePluginPortal()
-        mavenCentral()
-
         // Repositories
         maven("https://maven.enhancedpixel.xyz/releases")
         maven("https://maven.fabricmc.net")
@@ -14,6 +10,10 @@ pluginManagement {
         maven("https://repo.essential.gg/repository/maven-public")
         maven("https://server.bbkr.space/artifactory/libs-release/")
         maven("https://jitpack.io/")
+
+        // Default repositories
+        gradlePluginPortal()
+        mavenCentral()
 
         // Snapshots
         maven("https://maven.enhancedpixel.xyz/snapshots")
@@ -26,7 +26,7 @@ pluginManagement {
         kotlin("jvm") version(kotlin)
         kotlin("plugin.serialization") version(kotlin)
 
-        val egpt = "1.12.2"
+        val egpt = "1.12.4"
         id("xyz.enhancedpixel.gradle.multiversion-root") version(egpt)
     }
 }
