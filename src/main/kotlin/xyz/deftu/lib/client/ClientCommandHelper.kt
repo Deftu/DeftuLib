@@ -25,7 +25,7 @@ object ClientCommandHelper {
             dispatcher.register(builder)
         })
         //#else
-        //$$ ClientCommandManager.register(builder)
+        //$$ ClientCommandManager.DISPATCHER.register(builder)
         //#endif
     }
 }

@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import xyz.enhancedpixel.gradle.utils.GameSide
 
 plugins {
     java
     kotlin("jvm")
     kotlin("plugin.serialization")
+    `maven-publish`
     id("xyz.enhancedpixel.gradle.multiversion")
     id("xyz.enhancedpixel.gradle.tools")
     id("xyz.enhancedpixel.gradle.tools.loom")
@@ -72,5 +72,31 @@ tasks {
 
     remapJar {
         archiveBaseName.set("${modData.name}-${mcData.versionStr}")
+    }
+}
+
+publishing {
+    repositories {
+        if (project.hasProperty("deftu.publishing.username") && project.hasProperty("deftu.publishing.password")) {
+            fun MavenArtifactRepository.applyCredentials() {
+                authentication.create<BasicAuthentication>("basic")
+                credentials {
+                    username = property("deftu.publishing.username")?.toString()
+                    password = property("deftu.publishing.password")?.toString()
+                }
+            }
+
+            maven {
+                name = "DeftuReleases"
+                url = uri("https://maven.deftu.xyz/releases")
+                applyCredentials()
+            }
+
+            maven {
+                name = "DeftuSnapshots"
+                url = uri("https://maven.deftu.xyz/snapshots")
+                applyCredentials()
+            }
+        }
     }
 }
