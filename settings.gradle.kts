@@ -7,7 +7,7 @@ pluginManagement {
         mavenCentral()
 
         // Repositories
-        maven("https://maven.unifycraft.xyz/releases")
+        maven("https://maven.enhancedpixel.xyz/releases")
         maven("https://maven.fabricmc.net")
         maven("https://maven.architectury.dev/")
         maven("https://maven.minecraftforge.net")
@@ -16,7 +16,7 @@ pluginManagement {
         maven("https://jitpack.io/")
 
         // Snapshots
-        maven("https://maven.unifycraft.xyz/snapshots")
+        maven("https://maven.enhancedpixel.xyz/snapshots")
         maven("https://s01.oss.sonatype.org/content/groups/public/")
         mavenLocal()
     }
@@ -26,13 +26,12 @@ pluginManagement {
         kotlin("jvm") version(kotlin)
         kotlin("plugin.serialization") version(kotlin)
 
-        val ucgt = "1.11.0"
-        id("xyz.unifycraft.gradle.multiversion-root") version(ucgt)
+        val egpt = "1.12.2"
+        id("xyz.enhancedpixel.gradle.multiversion-root") version(egpt)
     }
 }
 
-val projectName: String = extra["mod.name"]?.toString()
-    ?: throw MissingPropertyException("mod.name has not been set.")
+val projectName: String = extra["mod.name"]?.toString() ?: throw MissingPropertyException("mod.name has not been set.")
 rootProject.name = projectName
 rootProject.buildFileName = "build.gradle.kts"
 

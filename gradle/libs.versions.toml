@@ -1,0 +1,8 @@
+[versions]
+enhancedeventbus = "1.0.0"
+deftils = "2.0.0"
+caffeine = "2.9.3"
+okhttp = "4.9.3"
+okio = "3.2.0"
+universalcraft = "242"
+elementa = "554"

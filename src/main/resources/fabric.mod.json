@@ -3,42 +3,36 @@
     "id": "${mod_id}",
     "version": "${mod_version}",
     "name": "${mod_name}",
-    "description": "I'm a template mod!",
+    "description": "Small library for Deftu's mods.",
     "authors": [
-        "Template Guy"
-    ],
-    "contributors": [
-        "Template Contributor"
+        "Deftu"
     ],
     "contact": {
-        "homepage": "...",
-        "issues": "...",
-        "sources": "..."
+        "homepage": "https://deftu.xyz/",
+        "issues": "https://github.com/Deftu/DeftuLib",
+        "sources": "https://github.com/Deftu/DeftuLib"
     },
     "license": "LGPL 3.0",
     "environment": "*",
     "entrypoints": {
-        "client": [
-            {
-                "adapter": "kotlin",
-                "value": "xyz.deftu.template.client.TemplateModClient"
-            }
-        ],
         "main": [
             {
                 "adapter": "kotlin",
-                "value": "xyz.deftu.template.TemplateMod"
+                "value": "xyz.deftu.lib.DeftuLib"
+            }
+        ],
+        "client": [
+            {
+                "adapter": "kotlin",
+                "value": "xyz.deftu.lib.client.DeftuLibClient"
             }
         ]
     },
-    "mixins": [
-        "${mod_id}.mixins.json"
-    ],
     "depends": {
         "fabric-api": "*",
         "fabricloader": ">=0.14.9",
         "fabric-language-kotlin": "*",
-        "minecraft": "~${mc_version}",
+        "minecraft": "~${minor_mc_version}",
         "java": ">=16"
     }
 }
