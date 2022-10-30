@@ -1,5 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import xyz.unifycraft.gradle.utils.GameSide
+import xyz.enhancedpixel.gradle.utils.GameSide
 
 plugins {
     java
@@ -8,10 +8,6 @@ plugins {
     id("xyz.enhancedpixel.gradle.multiversion")
     id("xyz.enhancedpixel.gradle.tools")
     id("xyz.enhancedpixel.gradle.tools.loom")
-}
-
-loomHelper {
-    disableRunConfigs(GameSide.SERVER)
 }
 
 repositories {
