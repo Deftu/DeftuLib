@@ -45,7 +45,7 @@ dependencies {
     api(include("com.squareup.okio:okio:${libs.versions.okio.get()}")!!)
     modApi(include(libs.versions.universalcraft.map {
         "gg.essential:universalcraft-${when (mcData.version) {
-            11902 -> "1.18.1-fabric"
+            11902 -> "1.19.1-fabric"
             11802 -> "1.18.1-fabric"
             else -> "${mcData.versionStr}-${mcData.loader.name}"
         }}:$it"

@@ -1,4 +1,4 @@
-package xyz.deftu.lib.client
+package xyz.deftu.lib.server
 
 import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder

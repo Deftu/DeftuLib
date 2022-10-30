@@ -4,6 +4,7 @@
     "version": "${mod_version}",
     "name": "${mod_name}",
     "description": "Small library for Deftu's mods.",
+    "icon": "assets/deftulib/icon.png",
     "authors": [
         "Deftu"
     ],
@@ -12,7 +13,7 @@
         "issues": "https://github.com/Deftu/DeftuLib/issues",
         "sources": "https://github.com/Deftu/DeftuLib"
     },
-    "license": "LGPL 3.0",
+    "license": "LGPL-3.0",
     "environment": "*",
     "entrypoints": {
         "main": [
