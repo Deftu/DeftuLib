@@ -1,6 +1,7 @@
 package xyz.deftu.lib.updater
 
 import kotlinx.coroutines.runBlocking
+import net.fabricmc.api.EnvType
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.loader.api.FabricLoader
@@ -24,15 +25,17 @@ class UpdateChecker {
     private val updates = mutableListOf<Update>()
 
     fun start() {
-        ClientPlayConnectionEvents.JOIN.register { _, _, _ ->
-            for (update in updates) {
-                ChatHelper.sendClientMessage(TextHelper.createTranslatableText("deftulib.update_checker.text", update.version.versionType.toText(), TextHelper.createLiteralText(update.mod.name).formatted(Formatting.AQUA)))
+        if (DeftuLib.ENVIRONMENT == EnvType.CLIENT) {
+            ClientPlayConnectionEvents.JOIN.register { _, _, _ ->
+                for (update in updates) {
+                    ChatHelper.sendClientMessage(TextHelper.createTranslatableText("deftulib.update_checker.text", update.version.versionType.toText(), TextHelper.createLiteralText(update.mod.name).formatted(Formatting.AQUA)))
+                }
             }
-        }
-
-        ServerLifecycleEvents.SERVER_STARTED.register {
-            for (update in updates) {
-                logger.info("Update available for ${update.mod.name} in the ${update.version.versionType.name.lowercase()} channel! (${update.version.versionNumber})")
+        } else {
+            ServerLifecycleEvents.SERVER_STARTED.register {
+                for (update in updates) {
+                    logger.info("Update available for ${update.mod.name} in the ${update.version.versionType.name.lowercase()} channel! (${update.version.versionNumber})")
+                }
             }
         }
 

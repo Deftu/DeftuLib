@@ -27,6 +27,12 @@
                 "adapter": "kotlin",
                 "value": "xyz.deftu.lib.client.DeftuLibClient"
             }
+        ],
+        "server": [
+            {
+                "adapter": "kotlin",
+                "value": "xyz.deftu.lib.server.DeftuLibServer"
+            }
         ]
     },
     "depends": {

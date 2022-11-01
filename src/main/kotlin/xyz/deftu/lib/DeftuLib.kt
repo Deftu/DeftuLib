@@ -1,6 +1,7 @@
 package xyz.deftu.lib
 
 import gg.essential.universal.ChatColor
+import net.fabricmc.api.EnvType
 import net.fabricmc.api.ModInitializer
 import okhttp3.OkHttpClient
 import org.apache.logging.log4j.LogManager
@@ -15,6 +16,9 @@ object DeftuLib : ModInitializer {
     const val NAME = "@MOD_NAME@"
     const val VERSION = "@MOD_VERSION@"
     const val ID = "@MOD_ID@"
+
+    var ENVIRONMENT = EnvType.CLIENT
+        private set
 
     val PREFIX = prefix {
         name = NAME
@@ -54,6 +58,9 @@ object DeftuLib : ModInitializer {
     }
 
     override fun onInitialize() {
-        UPDATE_CHECKER.start()
+    }
+
+    fun setEnvironment(environment: EnvType) {
+        ENVIRONMENT = environment
     }
 }
