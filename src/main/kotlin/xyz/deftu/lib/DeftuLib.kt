@@ -1,13 +1,31 @@
 package xyz.deftu.lib
 
+import gg.essential.universal.ChatColor
 import net.fabricmc.api.ModInitializer
 import okhttp3.OkHttpClient
 import org.apache.logging.log4j.LogManager
 import xyz.deftu.deftils.Multithreader
+import xyz.deftu.lib.updater.UpdateChecker
+import xyz.deftu.lib.utils.ChatPrefixType
+import xyz.deftu.lib.utils.prefix
 import xyz.enhancedpixel.enhancedeventbus.bus
 import xyz.enhancedpixel.enhancedeventbus.invokers.LMFInvoker
 
 object DeftuLib : ModInitializer {
+    const val NAME = "@MOD_NAME@"
+    const val VERSION = "@MOD_VERSION@"
+    const val ID = "@MOD_ID@"
+
+    val PREFIX = prefix {
+        name = NAME
+        color = ChatColor.GOLD
+        brackets {
+            type = ChatPrefixType.CARET
+            bold = true
+            color = ChatColor.GRAY
+        }
+    }
+
     val LOGGER = LogManager.getLogger("@MOD_NAME@")
 
     val EVENT_BUS = bus {
@@ -31,6 +49,11 @@ object DeftuLib : ModInitializer {
             }.build()
     }
 
+    val UPDATE_CHECKER by lazy {
+        UpdateChecker()
+    }
+
     override fun onInitialize() {
+        UPDATE_CHECKER.start()
     }
 }

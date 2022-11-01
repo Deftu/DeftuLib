@@ -8,6 +8,7 @@ plugins {
     id("xyz.enhancedpixel.gradle.multiversion")
     id("xyz.enhancedpixel.gradle.tools")
     id("xyz.enhancedpixel.gradle.tools.loom")
+    id("xyz.enhancedpixel.gradle.tools.blossom")
 }
 
 repositories {

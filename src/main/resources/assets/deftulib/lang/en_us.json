@@ -1,0 +1,6 @@
+{
+    "deftulib.update_checker.text": "New %s update available for %s!",
+    "deftulib.update_checker.release": "release",
+    "deftulib.update_checker.beta": "beta",
+    "deftulib.update_checker.alpha": "alpha"
+}

@@ -37,8 +37,8 @@ class ChatPrefixBlock {
     internal fun build(): String {
         var value = ""
         if (brackets.type == ChatPrefixType.BRACKETS) {
-            if (brackets.bold) value += ChatColor.BOLD
             value += brackets.color
+            if (brackets.bold) value += ChatColor.BOLD
             value += "["
         }
 
@@ -46,8 +46,8 @@ class ChatPrefixBlock {
         value += color
         value += name
         value += ChatColor.RESET
-        if (brackets.bold) value += ChatColor.BOLD
         value += brackets.color
+        if (brackets.bold) value += ChatColor.BOLD
         value += if (brackets.type == ChatPrefixType.BRACKETS) "]" else " >"
         value += ChatColor.RESET
         value += " "
