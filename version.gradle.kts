@@ -1,4 +1,8 @@
+import com.modrinth.minotaur.dependencies.DependencyType
+import com.modrinth.minotaur.dependencies.ModDependency
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import xyz.enhancedpixel.gradle.tools.CurseRelation
+import xyz.enhancedpixel.gradle.tools.CurseRelationType
 
 plugins {
     java
@@ -9,6 +13,7 @@ plugins {
     id("xyz.enhancedpixel.gradle.tools")
     id("xyz.enhancedpixel.gradle.tools.loom")
     id("xyz.enhancedpixel.gradle.tools.blossom")
+    id("xyz.enhancedpixel.gradle.tools.releases")
 }
 
 repositories {
@@ -62,6 +67,26 @@ dependencies {
     implementation(include("xyz.enhancedpixel:enhancedeventbus:${libs.versions.enhancedeventbus.get()}")!!)
     api(include("xyz.deftu.deftils:Deftils:${libs.versions.deftils.get()}")!!)
     implementation(include("com.github.ben-manes.caffeine:caffeine:${libs.versions.caffeine.get()}")!!)
+}
+
+releases {
+    modrinth {
+        projectId.set("WfhjX9sQ")
+        dependencies.set(listOf(
+            ModDependency("P7dR8mSH", DependencyType.REQUIRED),
+            ModDependency("Ha28R6CL", DependencyType.REQUIRED),
+            ModDependency("mOgUt4GM", DependencyType.REQUIRED)
+        ))
+    }
+
+    curseforge {
+        projectId.set("695205")
+        relations.set(listOf(
+            CurseRelation("fabric-api", CurseRelationType.REQUIRED),
+            CurseRelation("fabric-language-kotlin", CurseRelationType.REQUIRED),
+            CurseRelation("modmenu", CurseRelationType.REQUIRED)
+        ))
+    }
 }
 
 tasks {
