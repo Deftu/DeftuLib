@@ -8,7 +8,6 @@ import net.fabricmc.loader.api.ModContainer
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer
 import net.fabricmc.loader.api.metadata.ModMetadata
 import net.fabricmc.loader.impl.util.version.VersionParser
-import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 import org.apache.logging.log4j.LogManager
 import xyz.deftu.lib.DeftuLib
@@ -27,7 +26,7 @@ class UpdateChecker {
     fun start() {
         ClientPlayConnectionEvents.JOIN.register { _, _, _ ->
             for (update in updates) {
-                ChatHelper.sendClientMessage(Text.translatable("deftulib.update_checker.text", update.version.versionType.toText(), TextHelper.createLiteralText(update.mod.name).formatted(Formatting.AQUA)))
+                ChatHelper.sendClientMessage(TextHelper.createTranslatableText("deftulib.update_checker.text", update.version.versionType.toText(), TextHelper.createLiteralText(update.mod.name).formatted(Formatting.AQUA)))
             }
         }
 
