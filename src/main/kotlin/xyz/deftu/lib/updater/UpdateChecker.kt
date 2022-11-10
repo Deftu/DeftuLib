@@ -9,6 +9,7 @@ import net.fabricmc.loader.api.ModContainer
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer
 import net.fabricmc.loader.api.metadata.ModMetadata
 import net.fabricmc.loader.impl.util.version.VersionParser
+import net.minecraft.text.ClickEvent
 import net.minecraft.util.Formatting
 import org.apache.logging.log4j.LogManager
 import xyz.deftu.lib.DeftuLib
@@ -28,7 +29,25 @@ class UpdateChecker {
         if (DeftuLib.ENVIRONMENT == EnvType.CLIENT) {
             ClientPlayConnectionEvents.JOIN.register { _, _, _ ->
                 for (update in updates) {
-                    ChatHelper.sendClientMessage(TextHelper.createTranslatableText("deftulib.update_checker.text", update.version.versionType.toText(), TextHelper.createLiteralText(update.mod.name).formatted(Formatting.AQUA)))
+                    ChatHelper.sendClientMessage(
+                        TextHelper.createTranslatableText(
+                            "deftulib.update_checker.text",
+                            update.version.versionNumber,
+                            TextHelper.createLiteralText(update.mod.name)
+                                .formatted(Formatting.UNDERLINE)
+                                .formatted(Formatting.AQUA)
+                                .styled {
+                                    it.withClickEvent(
+                                        ClickEvent(
+                                            ClickEvent.Action.OPEN_URL,
+                                            "https://modrinth.com/mod/${update.version.projectId}"
+                                        )
+                                    )
+                                },
+                            update.mod.version.friendlyString,
+                            update.version.versionType.toText()
+                        )
+                    )
                 }
             }
         } else {
@@ -40,7 +59,7 @@ class UpdateChecker {
         }
 
         val mods = FabricLoader.getInstance().allMods.filter { container ->
-            container.shouldCheckForUpdates() && container.metadata.isDeftuMod()
+            container.metadata.isDeftuMod() || container.metadata.shouldCheck()
         }
 
         // check for updates in another thread (async checking)
@@ -49,7 +68,7 @@ class UpdateChecker {
             updates.clear()
             runBlocking {
                 mods.forEach { container ->
-                    if (!container.shouldCheckForUpdates()) return@forEach
+                    if (!container.shouldCheckEntrypointForUpdates()) return@forEach
 
                     val file = container.origin.paths[0]?.toFile() ?: return@forEach
                     if (!file.exists()) return@forEach
@@ -66,7 +85,7 @@ class UpdateChecker {
         }, 0, 30, TimeUnit.MINUTES)
     }
 
-    private fun ModContainer.shouldCheckForUpdates() = (entrypoints.filter { entrypoint ->
+    private fun ModContainer.shouldCheckEntrypointForUpdates() = (entrypoints.filter { entrypoint ->
         entrypoint.provider.metadata.id == metadata.id
     }.map(EntrypointContainer<UpdaterEntrypoint>::getEntrypoint).firstOrNull()?.shouldCheck() ?: true)
 
@@ -74,10 +93,12 @@ class UpdateChecker {
         person.name == "Deftu"
     }
 
+    private fun ModMetadata.shouldCheck() = containsCustomValue("deftulib_upate_checking") && getCustomValue("deftulib_upate_checking").asBoolean
+
     private fun ModrinthVersionType.toText() = when (this) {
-        ModrinthVersionType.release -> TextHelper.createTranslatableText("deftulib.update_checker.release").formatted(Formatting.GREEN)
-        ModrinthVersionType.beta -> TextHelper.createTranslatableText("deftulib.update_checker.beta").formatted(Formatting.YELLOW)
-        ModrinthVersionType.alpha -> TextHelper.createTranslatableText("deftulib.update_checker.alpha").formatted(Formatting.RED)
+        ModrinthVersionType.RELEASE -> TextHelper.createTranslatableText("deftulib.update_checker.release").formatted(Formatting.GREEN)
+        ModrinthVersionType.BETA -> TextHelper.createTranslatableText("deftulib.update_checker.beta").formatted(Formatting.YELLOW)
+        ModrinthVersionType.ALPHA -> TextHelper.createTranslatableText("deftulib.update_checker.alpha").formatted(Formatting.RED)
     }
 
     private data class Update(

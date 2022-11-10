@@ -26,6 +26,7 @@ internal class ModrinthClient {
 
     private val gson = GsonBuilder()
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        .registerTypeAdapter(ModrinthVersionType::class.java, ModrinthVersionType.Deserializer())
         .setPrettyPrinting()
         .setLenient()
         .create()
@@ -107,12 +108,23 @@ internal class ModrinthClient {
 }
 
 enum class ModrinthVersionType {
-    release,
-    alpha,
-    beta
+    RELEASE,
+    ALPHA,
+    BETA;
+
+    internal class Deserializer : JsonDeserializer<ModrinthVersionType> {
+        override fun deserialize(
+            json: JsonElement?,
+            typeOfT: java.lang.reflect.Type?,
+            context: JsonDeserializationContext?
+        ): ModrinthVersionType {
+            return ModrinthVersionType.valueOf(json?.asString?.uppercase() ?: RELEASE.name)
+        }
+    }
 }
 
 data class ModrinthVersion(
+    val projectId: String,
     val versionNumber: String,
     val versionType: ModrinthVersionType
 )

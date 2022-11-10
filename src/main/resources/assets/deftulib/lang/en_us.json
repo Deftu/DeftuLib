@@ -1,5 +1,5 @@
 {
-    "deftulib.update_checker.text": "New %s update available for %s!",
+    "deftulib.update_checker.text": "Version %s of %s is now available. You have %s. It's in the %s channel.",
     "deftulib.update_checker.release": "release",
     "deftulib.update_checker.beta": "beta",
     "deftulib.update_checker.alpha": "alpha"
