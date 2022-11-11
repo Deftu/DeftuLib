@@ -18,6 +18,7 @@ import xyz.deftu.lib.utils.TextHelper
 import java.util.concurrent.TimeUnit
 
 class UpdateChecker {
+    private var started = false
     private val logger = LogManager.getLogger("${DeftuLib.NAME} Update Checker")
     private val entrypoints: List<EntrypointContainer<UpdaterEntrypoint>>
         get() = FabricLoader.getInstance().getEntrypointContainers("update_checker", UpdaterEntrypoint::class.java)
@@ -26,6 +27,7 @@ class UpdateChecker {
     private val updates = mutableListOf<Update>()
 
     fun start() {
+        if (started) return
         if (DeftuLib.ENVIRONMENT == EnvType.CLIENT) {
             ClientPlayConnectionEvents.JOIN.register { _, _, _ ->
                 for (update in updates) {
@@ -83,6 +85,7 @@ class UpdateChecker {
                 }
             }
         }, 0, 30, TimeUnit.MINUTES)
+        started = true
     }
 
     private fun ModContainer.shouldCheckEntrypointForUpdates() = (entrypoints.filter { entrypoint ->

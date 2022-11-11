@@ -18,6 +18,7 @@ plugins {
 
 repositories {
     maven("https://maven.terraformersmc.com/")
+    maven("https://maven.isxander.dev/releases")
     mavenCentral()
 }
 
@@ -47,6 +48,8 @@ dependencies {
     }}")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.8.2+kotlin.1.7.10")
 
+    modImplementation("dev.isxander:yet-another-config-lib:1.6.0")
+
     api(include("com.squareup.okhttp3:okhttp:${libs.versions.okhttp.get()}")!!)
     api(include("com.squareup.okio:okio:${libs.versions.okio.get()}")!!)
     modApi(include(libs.versions.universalcraft.map {
@@ -75,7 +78,8 @@ releases {
         dependencies.set(listOf(
             ModDependency("P7dR8mSH", DependencyType.REQUIRED),
             ModDependency("Ha28R6CL", DependencyType.REQUIRED),
-            ModDependency("mOgUt4GM", DependencyType.REQUIRED)
+            ModDependency("mOgUt4GM", DependencyType.REQUIRED),
+            ModDependency("1eAoo2KR", DependencyType.REQUIRED),
         ))
     }
 
@@ -84,7 +88,8 @@ releases {
         relations.set(listOf(
             CurseRelation("fabric-api", CurseRelationType.REQUIRED),
             CurseRelation("fabric-language-kotlin", CurseRelationType.REQUIRED),
-            CurseRelation("modmenu", CurseRelationType.REQUIRED)
+            CurseRelation("modmenu", CurseRelationType.REQUIRED),
+            CurseRelation("yacl", CurseRelationType.REQUIRED),
         ))
     }
 }

@@ -14,11 +14,14 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 //#endif
 
 object ClientCommandHelper {
+    @JvmStatic
     fun create(name: String): LiteralArgumentBuilder<FabricClientCommandSource> =
         ClientCommandManager.literal(name)
+    @JvmStatic
     fun <T> argument(name: String, type: ArgumentType<T>): RequiredArgumentBuilder<FabricClientCommandSource, T> =
         ClientCommandManager.argument(name, type)
 
+    @JvmStatic
     fun register(builder: LiteralArgumentBuilder<FabricClientCommandSource>) {
         //#if MC>=11900
         ClientCommandRegistrationCallback.EVENT.register(ClientCommandRegistrationCallback { dispatcher, _ ->

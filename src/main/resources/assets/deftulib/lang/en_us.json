@@ -2,5 +2,15 @@
     "deftulib.update_checker.text": "Version %s of %s is now available. You have %s. It's in the %s channel.",
     "deftulib.update_checker.release": "release",
     "deftulib.update_checker.beta": "beta",
-    "deftulib.update_checker.alpha": "alpha"
+    "deftulib.update_checker.alpha": "alpha",
+
+    "deftulib.hud.menu.remove": "Remove",
+
+    "deftulib.config.title": "DeftuLib",
+
+    "deftulib.config.category.general": "General",
+    "deftulib.config.category.appearance": "Appearance",
+
+    "deftulib.config.option.update_checking": "Update Checking",
+    "deftulib.config.option.dark_mode": "Dark Mode"
 }

@@ -1,11 +1,13 @@
 package xyz.deftu.lib
 
+import com.google.gson.GsonBuilder
 import gg.essential.universal.ChatColor
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.ModInitializer
 import okhttp3.OkHttpClient
 import org.apache.logging.log4j.LogManager
 import xyz.deftu.deftils.Multithreader
+import xyz.deftu.lib.events.EnvironmentSetupEvent
 import xyz.deftu.lib.updater.UpdateChecker
 import xyz.deftu.lib.utils.ChatPrefixType
 import xyz.deftu.lib.utils.prefix
@@ -17,9 +19,11 @@ object DeftuLib : ModInitializer {
     const val VERSION = "@MOD_VERSION@"
     const val ID = "@MOD_ID@"
 
+    @JvmStatic
     var ENVIRONMENT = EnvType.CLIENT
         private set
 
+    @JvmStatic
     val PREFIX = prefix {
         name = NAME
         color = ChatColor.GOLD
@@ -30,8 +34,10 @@ object DeftuLib : ModInitializer {
         }
     }
 
+    @JvmStatic
     val LOGGER = LogManager.getLogger("@MOD_NAME@")
 
+    @JvmStatic
     val EVENT_BUS = bus {
         invoker = LMFInvoker()
         threadSafety = true
@@ -40,10 +46,12 @@ object DeftuLib : ModInitializer {
         }
     }
 
+    @JvmStatic
     val MULTITHREADER by lazy {
         Multithreader(35)
     }
 
+    @JvmStatic
     val HTTP_CLIENT by lazy {
         OkHttpClient.Builder()
             .addInterceptor { chain ->
@@ -53,14 +61,23 @@ object DeftuLib : ModInitializer {
             }.build()
     }
 
+    @JvmStatic
+    val GSON by lazy {
+        GsonBuilder()
+            .setPrettyPrinting()
+            .setLenient()
+            .create()
+    }
+
+    @JvmStatic
     val UPDATE_CHECKER by lazy {
         UpdateChecker()
     }
 
     override fun onInitialize() {
-    }
-
-    fun setEnvironment(environment: EnvType) {
-        ENVIRONMENT = environment
+        EnvironmentSetupEvent.EVENT.register { type ->
+            ENVIRONMENT = type
+            UPDATE_CHECKER.start()
+        }
     }
 }

@@ -1,4 +1,4 @@
-package xyz.deftu.lib.client.gui
+package xyz.deftu.lib.client.gui.hud
 
 import gg.essential.elementa.ElementaVersion
 import gg.essential.elementa.UIComponent
@@ -8,9 +8,13 @@ import gg.essential.elementa.components.Window
 import gg.essential.elementa.constraints.ChildBasedSizeConstraint
 import gg.essential.elementa.dsl.*
 import gg.essential.universal.UKeyboard
+import xyz.deftu.lib.DeftuLib
+import xyz.deftu.lib.client.gui.context.ContextMenuComponent
+import xyz.deftu.lib.client.gui.context.ContextMenuItem
 import xyz.deftu.lib.client.hud.DraggableHudWindow
 import xyz.deftu.lib.client.hud.HudComponent
 import xyz.deftu.lib.client.hud.HudContainer
+import xyz.deftu.lib.utils.TextHelper
 
 open class DraggableHudMenu(
     hudWindow: DraggableHudWindow,
@@ -38,13 +42,11 @@ open class DraggableHudMenu(
         }
 
         hudWindow.getNamespaces().map(Map.Entry<String, HudContainer>::value).toList().forEach { container ->
-            println("Adding container $container")
             container.getHudChildren().forEach { component ->
                 val container = HudContainer().constrain {
                     width = ChildBasedSizeConstraint()
                     height = ChildBasedSizeConstraint()
                 } childOf this.container
-                println("Adding component $component")
 
                 component.onFocus {
                     selectedComponent = component
@@ -55,8 +57,7 @@ open class DraggableHudMenu(
                         grabWindowFocus()
                         draggingOffset = it.relativeX to it.relativeY
                     } else if (it.mouseButton == 1) {
-                        // TODO - Show a context menu.
-                        println("Right click!")
+                        displayContextMenu(component, it.absoluteX, it.absoluteY)
                     }
                 }.onMouseRelease {
                     draggingOffset = 0f to 0f
@@ -80,6 +81,21 @@ open class DraggableHudMenu(
                 } childOf container
             }
         }
+    }
+
+    open fun getDefaultContextMenuItems() = emptyList<ContextMenuItem>()
+    open fun displayContextMenu(component: HudComponent, mouseX: Float, mouseY: Float) {
+        val contextMenu by ContextMenuComponent.create(
+            xPos = mouseX,
+            yPos = mouseY,
+            item = arrayOf(
+                ContextMenuItem(TextHelper.createTranslatableText("${DeftuLib.ID}.hud.menu.remove")) { item ->
+                    component.remove()
+                    component.hide(true)
+                    item.closeParent()
+                }
+            ) + getDefaultContextMenuItems().toTypedArray()
+        ) childOf window
     }
 
     private fun UIComponent.isHudComponent(): Boolean {
