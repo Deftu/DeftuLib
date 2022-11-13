@@ -3,9 +3,11 @@ package xyz.deftu.lib.client.hud
 import gg.essential.elementa.components.UIContainer
 
 abstract class HudComponent : UIContainer() {
+    internal lateinit var container: HudContainer
+
     lateinit var hudWindow: DraggableHudWindow
         internal set
-    internal val moveListeners = mutableListOf<HudComponent.() -> Unit>()
+    internal val moveListeners = mutableListOf<HudComponent.(posX: Float, posY: Float) -> Unit>()
     internal val removeListeners = mutableListOf<HudComponent.() -> Unit>()
 
     fun remove() {
@@ -13,7 +15,7 @@ abstract class HudComponent : UIContainer() {
         hudWindow.remove(this)
     }
 
-    fun onMove(listener: HudComponent.() -> Unit) {
+    fun onMove(listener: HudComponent.(posX: Float, posY: Float) -> Unit) {
         moveListeners.add(listener)
     }
 

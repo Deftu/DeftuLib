@@ -108,6 +108,7 @@ tasks {
 
 publishing {
     repositories {
+        mavenLocal()
         if (project.hasProperty("deftu.publishing.username") && project.hasProperty("deftu.publishing.password")) {
             fun MavenArtifactRepository.applyCredentials() {
                 authentication.create<BasicAuthentication>("basic")

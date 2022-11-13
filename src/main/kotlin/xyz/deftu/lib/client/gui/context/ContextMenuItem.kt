@@ -3,7 +3,7 @@ package xyz.deftu.lib.client.gui.context
 import net.minecraft.text.Text
 import java.util.function.Consumer
 
-data class ContextMenuItem(
+data class ContextMenuItem internal constructor(
     var text: Text,
     val action: Consumer<ContextMenuItem>
 ) {
@@ -24,17 +24,20 @@ data class ContextMenuItem(
 
     fun setEnabled(enabled: Boolean) = apply { this.enabled = enabled }
     fun setVisible(visible: Boolean) = apply { this.visible = visible }
+    fun setEnabled(enabled: () -> Boolean) = apply { this.enabled = enabled() }
+    fun setVisible(visible: () -> Boolean) = apply { this.visible = visible() }
 
     fun addEnableChangeListener(listener: Consumer<Boolean>) = apply { enableChangeListeners.add(listener) }
     fun addVisibilityChangeListener(listener: Consumer<Boolean>) = apply { visibilityChangeListeners.add(listener) }
 
     fun closeParent() = parent.close()
     fun appendSibling(item: ContextMenuItem) = apply { parent.addItem(item) }
+    fun appendSibling(item: () -> ContextMenuItem) = apply { parent.addItem(item()) }
 
     fun performAction() = action.accept(this)
 
     internal fun setupComponent(component: ContextMenuComponent): ContextMenuItemComponent {
         this.parent = component
-        return ContextMenuItemComponent(this, component)
+        return ContextMenuItemComponent(this)
     }
 }

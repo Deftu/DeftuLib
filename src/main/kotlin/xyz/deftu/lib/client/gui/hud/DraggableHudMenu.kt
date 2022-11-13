@@ -2,6 +2,7 @@ package xyz.deftu.lib.client.gui.hud
 
 import gg.essential.elementa.ElementaVersion
 import gg.essential.elementa.UIComponent
+import gg.essential.elementa.UIConstraints
 import gg.essential.elementa.WindowScreen
 import gg.essential.elementa.components.UIContainer
 import gg.essential.elementa.components.Window
@@ -9,6 +10,7 @@ import gg.essential.elementa.constraints.ChildBasedSizeConstraint
 import gg.essential.elementa.dsl.*
 import gg.essential.universal.UKeyboard
 import xyz.deftu.lib.DeftuLib
+import xyz.deftu.lib.client.gui.context.ContextMenu
 import xyz.deftu.lib.client.gui.context.ContextMenuComponent
 import xyz.deftu.lib.client.gui.context.ContextMenuItem
 import xyz.deftu.lib.client.hud.DraggableHudWindow
@@ -17,15 +19,21 @@ import xyz.deftu.lib.client.hud.HudContainer
 import xyz.deftu.lib.utils.TextHelper
 
 open class DraggableHudMenu(
-    hudWindow: DraggableHudWindow,
+    val hudWindow: DraggableHudWindow,
     restoreCurrentGuiOnClose: Boolean = true
 ) : WindowScreen(
     version = ElementaVersion.V2,
     restoreCurrentGuiOnClose = restoreCurrentGuiOnClose
 ) {
+    // Options
+    private var defaultContextMenu = true
+
+    // Internal variables
     private var selectedComponent: HudComponent? = null
     private var draggingOffset = 0f to 0f
-    private val container by UIContainer().constrain {
+    private var cachedConstraints = mutableMapOf<UIComponent, UIConstraints>()
+
+    val container by UIContainer().constrain {
         width = 100.percent
         height = 100.percent
     } childOf window
@@ -35,19 +43,33 @@ open class DraggableHudMenu(
         hudWindow.initialize()
 
         // Run through all the namespaces and add them to the menu
-        window.onMouseClick {
+        container.onMouseClick {
             if (it.mouseButton == 0 && !it.target.isHudComponent()) {
                 selectedComponent = null
             }
         }
 
+        // Load all the components so they can be edited.
+        refresh()
+    }
+
+    fun refresh() {
+        container.clearChildren()
+
+        cachedConstraints.forEach { (component, constraints) ->
+            component.constraints = constraints
+            component.onWindowResize()
+        }
+
         hudWindow.getNamespaces().map(Map.Entry<String, HudContainer>::value).toList().forEach { container ->
             container.getHudChildren().forEach { component ->
+                cachedConstraints[component] = component.constraints
                 val container = HudContainer().constrain {
                     width = ChildBasedSizeConstraint()
                     height = ChildBasedSizeConstraint()
                 } childOf this.container
 
+                setupHudComponent(State.PRE, component)
                 component.onFocus {
                     selectedComponent = component
                 }.onFocusLost {
@@ -56,7 +78,7 @@ open class DraggableHudMenu(
                     if (it.mouseButton == 0) {
                         grabWindowFocus()
                         draggingOffset = it.relativeX to it.relativeY
-                    } else if (it.mouseButton == 1) {
+                    } else if (it.mouseButton == 1 && defaultContextMenu) {
                         displayContextMenu(component, it.absoluteX, it.absoluteY)
                     }
                 }.onMouseRelease {
@@ -65,40 +87,57 @@ open class DraggableHudMenu(
                     if (selectedComponent != component) return@onMouseDrag
 
                     if (mouseButton == 0) {
-                        move(component, container, mouseX + component.getLeft(), mouseY + component.getTop())
+                        move(component, mouseX + component.getLeft(), mouseY + component.getTop())
                     }
-                }.onKeyType { typedChar, keyCode ->
+                }.onKeyType { _, keyCode ->
                     if (component != selectedComponent) return@onKeyType
 
                     draggingOffset = 0f to 0f
                     when (keyCode) {
-                        UKeyboard.KEY_ESCAPE -> selectedComponent = null
-                        UKeyboard.KEY_UP -> move(component, container, component.getLeft(), component.getTop() - 1)
-                        UKeyboard.KEY_DOWN -> move(component, container, component.getLeft(), component.getTop() + 1)
-                        UKeyboard.KEY_LEFT -> move(component, container, component.getLeft() - 1, component.getTop())
-                        UKeyboard.KEY_RIGHT -> move(component, container, component.getLeft() + 1, component.getTop())
+                        UKeyboard.KEY_ESCAPE -> {
+                            selectedComponent = null
+                            loseFocus()
+                        }
+                        UKeyboard.KEY_UP -> move(component, component.getLeft(), component.getTop() - 1)
+                        UKeyboard.KEY_DOWN -> move(component, component.getLeft(), component.getTop() + 1)
+                        UKeyboard.KEY_LEFT -> move(component, component.getLeft() - 1, component.getTop())
+                        UKeyboard.KEY_RIGHT -> move(component, component.getLeft() + 1, component.getTop())
                     }
                 } childOf container
+                container.constrain {
+                    x = component.constraints.x
+                    y = component.constraints.y
+                }
+
+                component.constrain {
+                    x = 0.pixels
+                    y = 0.pixels
+                }
+
+                setupHudComponent(State.POST, component)
             }
         }
     }
 
-    open fun getDefaultContextMenuItems() = emptyList<ContextMenuItem>()
+    open fun getDefaultContextMenuItems(component: HudComponent) = emptyList<ContextMenuItem>()
     open fun displayContextMenu(component: HudComponent, mouseX: Float, mouseY: Float) {
-        val contextMenu by ContextMenuComponent.create(
+        val contextMenu by ContextMenu.create(
             xPos = mouseX,
             yPos = mouseY,
             item = arrayOf(
-                ContextMenuItem(TextHelper.createTranslatableText("${DeftuLib.ID}.hud.menu.remove")) { item ->
+                ContextMenu.item(TextHelper.createTranslatableText("${DeftuLib.ID}.hud.menu.remove")) { item ->
                     component.remove()
                     component.hide(true)
                     item.closeParent()
                 }
-            ) + getDefaultContextMenuItems().toTypedArray()
+            ) + getDefaultContextMenuItems(component).toTypedArray()
         ) childOf window
     }
 
-    private fun UIComponent.isHudComponent(): Boolean {
+    open fun setupHudComponent(state: State, component: HudComponent) {
+    }
+
+    fun UIComponent.isHudComponent(): Boolean {
         var parent = this.parent
         while (true) {
             if (parent is HudComponent) return true
@@ -107,12 +146,18 @@ open class DraggableHudMenu(
         }
     }
 
-    private fun move(component: HudComponent, container: HudContainer, offsetX: Float, offsetY: Float) {
+    private fun move(component: HudComponent, offsetX: Float, offsetY: Float) {
         val window = Window.of(component)
         val newX = (offsetX - draggingOffset.first).coerceIn(window.getLeft()..(window.getRight() - component.getWidth())) / window.getWidth() * 100
         val newY = (offsetY - draggingOffset.second).coerceIn(window.getTop()..(window.getBottom() - component.getHeight())) / window.getHeight() * 100
+        val container = component.parent as HudContainer
         container.setX(newX.percent)
         container.setY(newY.percent)
-        component.moveListeners.forEach { it(component) }
+        component.moveListeners.forEach { it(component, newX, newY) }
+    }
+
+    enum class State {
+        PRE,
+        POST
     }
 }

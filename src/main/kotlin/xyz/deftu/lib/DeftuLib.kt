@@ -75,6 +75,7 @@ object DeftuLib : ModInitializer {
     }
 
     override fun onInitialize() {
+        DeftuLibConfig.load()
         EnvironmentSetupEvent.EVENT.register { type ->
             ENVIRONMENT = type
             UPDATE_CHECKER.start()

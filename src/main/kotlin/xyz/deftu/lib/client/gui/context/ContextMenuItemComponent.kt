@@ -12,8 +12,7 @@ import gg.essential.elementa.state.toConstraint
 import xyz.deftu.lib.client.gui.DeftuPalette
 
 internal class ContextMenuItemComponent(
-    item: ContextMenuItem,
-    private val contextMenu: ContextMenuComponent
+    item: ContextMenuItem
 ) : UIContainer() {
     private val colorState = BasicState(DeftuPalette.getBackground())
     private val textColorState = BasicState(DeftuPalette.getText())

@@ -16,5 +16,7 @@ object DeftuLibClient : ClientModInitializer {
         EnvironmentSetupEvent.EVENT.invoker().onEnvironmentSetup(EnvType.CLIENT)
         hudWindow.initialize()
         draggableHudWindow.initialize()
+
+        Test.initialize()
     }
 }
