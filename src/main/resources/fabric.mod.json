@@ -33,6 +33,12 @@
                 "adapter": "kotlin",
                 "value": "xyz.deftu.lib.server.DeftuLibServer"
             }
+        ],
+        "modmenu": [
+            {
+                "adapter": "kotlin",
+                "value": "xyz.deftu.lib.utils.ModMenuIntegration"
+            }
         ]
     },
     "mixins": [

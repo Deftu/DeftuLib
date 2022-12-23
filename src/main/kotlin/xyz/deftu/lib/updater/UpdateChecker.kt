@@ -10,7 +10,6 @@ import net.fabricmc.loader.api.entrypoint.EntrypointContainer
 import net.fabricmc.loader.api.metadata.ModMetadata
 import net.fabricmc.loader.impl.util.version.VersionParser
 import net.minecraft.text.ClickEvent
-import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 import org.apache.logging.log4j.LogManager
 import xyz.deftu.lib.DeftuLib
@@ -19,6 +18,7 @@ import xyz.deftu.lib.utils.TextHelper
 import java.util.concurrent.TimeUnit
 
 class UpdateChecker {
+    private var started = false
     private val logger = LogManager.getLogger("${DeftuLib.NAME} Update Checker")
     private val entrypoints: List<EntrypointContainer<UpdaterEntrypoint>>
         get() = FabricLoader.getInstance().getEntrypointContainers("update_checker", UpdaterEntrypoint::class.java)
@@ -38,7 +38,7 @@ class UpdateChecker {
             updates.clear()
             runBlocking {
                 mods.forEach { container ->
-                    if (!container.shouldCheckForUpdates()) return@forEach
+                    if (!container.shouldCheckEntrypointForUpdates()) return@forEach
 
                     val file = container.origin.paths[0]?.toFile() ?: return@forEach
                     if (!file.exists()) return@forEach
@@ -56,6 +56,7 @@ class UpdateChecker {
                 sendUpdateNotifications()
             }
         }, 0, 30, TimeUnit.MINUTES)
+        started = true
     }
 
     private fun constructUpdateMessage(update: Update): Text =
@@ -76,6 +77,8 @@ class UpdateChecker {
     private fun ModMetadata.isDeftuMod() = authors.any { person ->
         person.name == "Deftu"
     }
+
+    private fun ModMetadata.shouldCheck() = containsCustomValue("deftulib_upate_checking") && getCustomValue("deftulib_upate_checking").asBoolean
 
     private fun ModrinthVersionType.toText() = when (this) {
         ModrinthVersionType.RELEASE -> TextHelper.createTranslatableText("deftulib.update_checker.release").formatted(Formatting.GREEN)

@@ -13,11 +13,14 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 //#endif
 
 object ServerCommandHelper {
+    @JvmStatic
     fun create(name: String): LiteralArgumentBuilder<ServerCommandSource> =
         CommandManager.literal(name)
+    @JvmStatic
     fun <T> argument(name: String, type: ArgumentType<T>): RequiredArgumentBuilder<ServerCommandSource, T> =
         CommandManager.argument(name, type)
 
+    @JvmStatic
     fun register(builder: LiteralArgumentBuilder<ServerCommandSource?>?) {
         CommandRegistrationCallback.EVENT.register(CommandRegistrationCallback {
                 dispatcher,

@@ -1,4 +1,4 @@
-package xyz.deftu.lib.client
+package xyz.deftu.lib.client.hud
 
 import gg.essential.elementa.ElementaVersion
 import gg.essential.elementa.components.Window
