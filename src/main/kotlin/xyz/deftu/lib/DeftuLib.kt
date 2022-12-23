@@ -1,5 +1,7 @@
 package xyz.deftu.lib
 
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.GsonBuilder
 import gg.essential.universal.ChatColor
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.ModInitializer
@@ -9,8 +11,8 @@ import xyz.deftu.deftils.Multithreader
 import xyz.deftu.lib.updater.UpdateChecker
 import xyz.deftu.lib.utils.ChatPrefixType
 import xyz.deftu.lib.utils.prefix
-import xyz.enhancedpixel.enhancedeventbus.bus
-import xyz.enhancedpixel.enhancedeventbus.invokers.LMFInvoker
+import xyz.deftu.enhancedeventbus.bus
+import xyz.deftu.enhancedeventbus.invokers.LMFInvoker
 
 object DeftuLib : ModInitializer {
     const val NAME = "@MOD_NAME@"
@@ -32,6 +34,14 @@ object DeftuLib : ModInitializer {
 
     val LOGGER = LogManager.getLogger("@MOD_NAME@")
 
+    val GSON by lazy {
+        GsonBuilder()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .setPrettyPrinting()
+            .setLenient()
+            .create()
+    }
+
     val EVENT_BUS = bus {
         invoker = LMFInvoker()
         threadSafety = true
@@ -45,6 +55,15 @@ object DeftuLib : ModInitializer {
     }
 
     val HTTP_CLIENT by lazy {
+        OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                chain.proceed(chain.request().newBuilder()
+                    .addHeader("User-Agent", "${NAME}/${VERSION}")
+                    .build())
+            }.build()
+    }
+
+    val BROWSER_HTTP_CLIENT by lazy {
         OkHttpClient.Builder()
             .addInterceptor { chain ->
                 chain.proceed(chain.request().newBuilder()
