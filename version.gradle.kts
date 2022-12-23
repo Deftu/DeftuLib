@@ -1,19 +1,19 @@
 import com.modrinth.minotaur.dependencies.DependencyType
 import com.modrinth.minotaur.dependencies.ModDependency
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import xyz.enhancedpixel.gradle.tools.CurseRelation
-import xyz.enhancedpixel.gradle.tools.CurseRelationType
+import xyz.deftu.gradle.tools.CurseRelation
+import xyz.deftu.gradle.tools.CurseRelationType
 
 plugins {
     java
     kotlin("jvm")
     kotlin("plugin.serialization")
     `maven-publish`
-    id("xyz.enhancedpixel.gradle.multiversion")
-    id("xyz.enhancedpixel.gradle.tools")
-    id("xyz.enhancedpixel.gradle.tools.loom")
-    id("xyz.enhancedpixel.gradle.tools.blossom")
-    id("xyz.enhancedpixel.gradle.tools.releases")
+    id("xyz.deftu.gradle.multiversion")
+    id("xyz.deftu.gradle.tools")
+    id("xyz.deftu.gradle.tools.loom")
+    id("xyz.deftu.gradle.tools.blossom")
+    id("xyz.deftu.gradle.tools.releases")
 }
 
 repositories {
@@ -35,11 +35,7 @@ fun Dependency?.excludeVitals(): Dependency = apply {
 dependencies {
     implementation(kotlin("stdlib"))
 
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${when (mcData.version) {
-        11902 -> "0.64.0+1.19.2"
-        11802 -> "0.59.1+1.18.2"
-        else -> throw IllegalStateException("Invalid MC version: ${mcData.version}")
-    }}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${mcData.fabricApiVersion}")
     modImplementation("com.terraformersmc:modmenu:${when (mcData.version) {
         11902 -> "4.0.6"
         11802 -> "3.2.3"
@@ -64,7 +60,7 @@ dependencies {
         }}:$it"
     }.get()).excludeVitals())
 
-    implementation(include("xyz.enhancedpixel:enhancedeventbus:${libs.versions.enhancedeventbus.get()}")!!)
+    implementation(include("xyz.deftu:enhancedeventbus:${libs.versions.enhancedeventbus.get()}")!!)
     api(include("xyz.deftu.deftils:Deftils:${libs.versions.deftils.get()}")!!)
     implementation(include("com.github.ben-manes.caffeine:caffeine:${libs.versions.caffeine.get()}")!!)
 }
