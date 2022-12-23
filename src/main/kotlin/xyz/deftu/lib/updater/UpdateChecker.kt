@@ -27,41 +27,9 @@ class UpdateChecker {
     private val updates = mutableListOf<Update>()
 
     fun start() {
-        if (started) return
-        if (DeftuLib.ENVIRONMENT == EnvType.CLIENT) {
-            ClientPlayConnectionEvents.JOIN.register { _, _, _ ->
-                for (update in updates) {
-                    ChatHelper.sendClientMessage(
-                        TextHelper.createTranslatableText(
-                            "deftulib.update_checker.text",
-                            update.version.versionNumber,
-                            TextHelper.createLiteralText(update.mod.name)
-                                .formatted(Formatting.UNDERLINE)
-                                .formatted(Formatting.AQUA)
-                                .styled {
-                                    it.withClickEvent(
-                                        ClickEvent(
-                                            ClickEvent.Action.OPEN_URL,
-                                            "https://modrinth.com/mod/${update.version.projectId}"
-                                        )
-                                    )
-                                },
-                            update.mod.version.friendlyString,
-                            update.version.versionType.toText()
-                        )
-                    )
-                }
-            }
-        } else {
-            ServerLifecycleEvents.SERVER_STARTED.register {
-                for (update in updates) {
-                    logger.info("Update available for ${update.mod.name} in the ${update.version.versionType.name.lowercase()} channel! (${update.version.versionNumber})")
-                }
-            }
-        }
-
+        sendUpdateNotifications()
         val mods = FabricLoader.getInstance().allMods.filter { container ->
-            container.metadata.isDeftuMod() || container.metadata.shouldCheck()
+            container.metadata.isDeftuMod() && container.shouldCheckForUpdates()
         }
 
         // check for updates in another thread (async checking)
@@ -83,12 +51,26 @@ class UpdateChecker {
                         updates.add(Update(container.metadata, modrinthVersion))
                     }
                 }
+
+                logger.info("Finished checking for updates!")
+                sendUpdateNotifications()
             }
         }, 0, 30, TimeUnit.MINUTES)
         started = true
     }
 
-    private fun ModContainer.shouldCheckEntrypointForUpdates() = (entrypoints.filter { entrypoint ->
+    private fun constructUpdateMessage(update: Update): Text =
+        TextHelper.createTranslatableText(
+            "deftulib.update_checker.text",
+            update.version.versionType.toText().formatted(Formatting.UNDERLINE).styled {
+                it.withClickEvent(ClickEvent(ClickEvent.Action.OPEN_URL, update.version.versionUrl))
+            },
+            TextHelper.createLiteralText(update.mod.name).formatted(Formatting.AQUA, Formatting.UNDERLINE).styled {
+                it.withClickEvent(ClickEvent(ClickEvent.Action.OPEN_URL, update.version.pageUrl))
+            }
+        )
+
+    private fun ModContainer.shouldCheckForUpdates() = (entrypoints.filter { entrypoint ->
         entrypoint.provider.metadata.id == metadata.id
     }.map(EntrypointContainer<UpdaterEntrypoint>::getEntrypoint).firstOrNull()?.shouldCheck() ?: true)
 
@@ -102,6 +84,24 @@ class UpdateChecker {
         ModrinthVersionType.RELEASE -> TextHelper.createTranslatableText("deftulib.update_checker.release").formatted(Formatting.GREEN)
         ModrinthVersionType.BETA -> TextHelper.createTranslatableText("deftulib.update_checker.beta").formatted(Formatting.YELLOW)
         ModrinthVersionType.ALPHA -> TextHelper.createTranslatableText("deftulib.update_checker.alpha").formatted(Formatting.RED)
+    }
+
+    private fun sendUpdateNotifications() {
+        if (updates.isEmpty()) return
+
+        if (DeftuLib.ENVIRONMENT == EnvType.CLIENT) {
+            ClientPlayConnectionEvents.JOIN.register { _, _, _ ->
+                for (update in updates) {
+                    ChatHelper.sendClientMessage(constructUpdateMessage(update))
+                }
+            }
+        } else {
+            ServerLifecycleEvents.SERVER_STARTED.register {
+                for (update in updates) {
+                    logger.info("Update available for ${update.mod.name} in the ${update.version.versionType.name.lowercase()} channel! (${update.version.versionNumber}, ${update.version.versionUrl})")
+                }
+            }
+        }
     }
 
     private data class Update(

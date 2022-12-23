@@ -1,6 +1,8 @@
 package xyz.deftu.lib.updater
 
 import com.google.gson.*
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonWriter
 import kotlinx.coroutines.delay
 import net.minecraft.SharedConstants
 import okhttp3.MediaType.Companion.toMediaType
@@ -13,22 +15,8 @@ import java.io.FileInputStream
 import java.security.MessageDigest
 
 internal class ModrinthClient {
-    // Create a custom HTTP client to use with the Modrinth API
-    private val httpClient by lazy {
-        OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                chain.proceed(chain.request().newBuilder()
-                    .addHeader("User-Agent", "${DeftuLib.NAME}/${DeftuLib.VERSION}")
-                    .addHeader("Accept", "application/json")
-                    .build())
-            }.build()
-    }
-
-    private val gson = GsonBuilder()
-        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        .registerTypeAdapter(ModrinthVersionType::class.java, ModrinthVersionType.Deserializer())
-        .setPrettyPrinting()
-        .setLenient()
+    private val gson = DeftuLib.GSON.newBuilder()
+        .registerTypeAdapter(ModrinthVersionType::class.java, ModrinthVersionType.Adapter())
         .create()
 
     private var lastRequest = 0L
@@ -44,7 +32,7 @@ internal class ModrinthClient {
 
         lastRequest = currentTime
 
-        val response = httpClient.newCall(
+        val response = DeftuLib.HTTP_CLIENT.newCall(
             Request.Builder()
                 .post(constructBody().toRequestBody("application/json".toMediaType()))
                 .url("https://api.modrinth.com/v2/version_file/${createSha1(file)}/update?algorithm=sha1")
@@ -112,13 +100,13 @@ enum class ModrinthVersionType {
     ALPHA,
     BETA;
 
-    internal class Deserializer : JsonDeserializer<ModrinthVersionType> {
-        override fun deserialize(
-            json: JsonElement?,
-            typeOfT: java.lang.reflect.Type?,
-            context: JsonDeserializationContext?
-        ): ModrinthVersionType {
-            return ModrinthVersionType.valueOf(json?.asString?.uppercase() ?: RELEASE.name)
+    class Adapter : TypeAdapter<ModrinthVersionType>() {
+        override fun write(out: JsonWriter, value: ModrinthVersionType) {
+            out.value(value.name.lowercase())
+        }
+
+        override fun read(input: JsonReader): ModrinthVersionType {
+            return valueOf(input.nextString().uppercase())
         }
     }
 }
@@ -127,4 +115,9 @@ data class ModrinthVersion(
     val projectId: String,
     val versionNumber: String,
     val versionType: ModrinthVersionType
-)
+) {
+    val pageUrl: String
+        get() = "https://modrinth.com/mod/$projectId"
+    val versionUrl: String
+        get() = "$pageUrl/version/$versionNumber"
+}
