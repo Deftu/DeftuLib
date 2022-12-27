@@ -26,9 +26,12 @@ data class ContextMenuItem internal constructor(
     fun setVisible(visible: Boolean) = apply { this.visible = visible }
     fun setEnabled(enabled: () -> Boolean) = apply { this.enabled = enabled() }
     fun setVisible(visible: () -> Boolean) = apply { this.visible = visible() }
+    fun remove() = apply { parent.removeItem(this) }
 
     fun addEnableChangeListener(listener: Consumer<Boolean>) = apply { enableChangeListeners.add(listener) }
+    fun removeEnableChangeListener(listener: Consumer<Boolean>) = apply { enableChangeListeners.remove(listener) }
     fun addVisibilityChangeListener(listener: Consumer<Boolean>) = apply { visibilityChangeListeners.add(listener) }
+    fun removeVisibilityChangeListener(listener: Consumer<Boolean>) = apply { visibilityChangeListeners.remove(listener) }
 
     fun closeParent() = parent.close()
     fun appendSibling(item: ContextMenuItem) = apply { parent.addItem(item) }
@@ -38,6 +41,7 @@ data class ContextMenuItem internal constructor(
 
     internal fun setupComponent(component: ContextMenuComponent): ContextMenuItemComponent {
         this.parent = component
+        if (this.parent.hasItem(this)) throw IllegalStateException("This item is already added to a context menu!")
         return ContextMenuItemComponent(this)
     }
 }

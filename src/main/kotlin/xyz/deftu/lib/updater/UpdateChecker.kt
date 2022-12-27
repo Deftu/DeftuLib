@@ -10,6 +10,7 @@ import net.fabricmc.loader.api.entrypoint.EntrypointContainer
 import net.fabricmc.loader.api.metadata.ModMetadata
 import net.fabricmc.loader.impl.util.version.VersionParser
 import net.minecraft.text.ClickEvent
+import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 import org.apache.logging.log4j.LogManager
 import xyz.deftu.lib.DeftuLib
@@ -33,12 +34,12 @@ class UpdateChecker {
         }
 
         // check for updates in another thread (async checking)
-        DeftuLib.MULTITHREADER.schedule({
+        DeftuLib.multithreader.schedule({
             logger.info("Checking for updates...")
             updates.clear()
             runBlocking {
                 mods.forEach { container ->
-                    if (!container.shouldCheckEntrypointForUpdates()) return@forEach
+                    if (!container.shouldCheckForUpdates()) return@forEach
 
                     val file = container.origin.paths[0]?.toFile() ?: return@forEach
                     if (!file.exists()) return@forEach
@@ -62,12 +63,14 @@ class UpdateChecker {
     private fun constructUpdateMessage(update: Update): Text =
         TextHelper.createTranslatableText(
             "deftulib.update_checker.text",
-            update.version.versionType.toText().formatted(Formatting.UNDERLINE).styled {
-                it.withClickEvent(ClickEvent(ClickEvent.Action.OPEN_URL, update.version.versionUrl))
+            TextHelper.createLiteralText(update.version.versionNumber).formatted(Formatting.GREEN, Formatting.UNDERLINE).styled { style ->
+                style.withClickEvent(ClickEvent(ClickEvent.Action.OPEN_URL, update.version.versionUrl))
             },
             TextHelper.createLiteralText(update.mod.name).formatted(Formatting.AQUA, Formatting.UNDERLINE).styled {
                 it.withClickEvent(ClickEvent(ClickEvent.Action.OPEN_URL, update.version.pageUrl))
-            }
+            },
+            update.mod.version.friendlyString,
+            update.version.versionType.toText()
         )
 
     private fun ModContainer.shouldCheckForUpdates() = (entrypoints.filter { entrypoint ->
@@ -89,7 +92,7 @@ class UpdateChecker {
     private fun sendUpdateNotifications() {
         if (updates.isEmpty()) return
 
-        if (DeftuLib.ENVIRONMENT == EnvType.CLIENT) {
+        if (DeftuLib.environment == EnvType.CLIENT) {
             ClientPlayConnectionEvents.JOIN.register { _, _, _ ->
                 for (update in updates) {
                     ChatHelper.sendClientMessage(constructUpdateMessage(update))

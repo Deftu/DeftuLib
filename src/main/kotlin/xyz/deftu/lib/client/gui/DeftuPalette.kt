@@ -2,6 +2,7 @@ package xyz.deftu.lib.client.gui
 
 import gg.essential.elementa.utils.withAlpha
 import xyz.deftu.lib.DeftuLibConfig
+import xyz.deftu.lib.client.utils.withAlphaPercentage
 import java.awt.Color
 
 object DeftuPalette {
@@ -21,15 +22,15 @@ object DeftuPalette {
 
     // Button outline colors
     private val button = Color(0x960D0D)
-    private val buttonFaded = Color(0x960D0D).withAlpha(191)
+    private val buttonFaded = Color(0x960D0D).withAlphaPercentage(0.75f)
 
     // Text colors
     private val text = Color(0xFDFBF9)
-    private val textFaded = Color(0xFDFBF9).withAlpha(191)
-    private val textDisabled = Color(0xFDFBF9).withAlpha(63)
+    private val textFaded = Color(0xFDFBF9).withAlphaPercentage(0.75f)
+    private val textDisabled = Color(0xFDFBF9).withAlpha(0.25f)
     private val textLight = Color(0x28282B)
-    private val textLightFaded = Color(0x28282B).withAlpha(191)
-    private val textLightDisabled = Color(0x28282B).withAlpha(63)
+    private val textLightFaded = Color(0x28282B).withAlphaPercentage(0.75f)
+    private val textLightDisabled = Color(0x28282B).withAlpha(0.25f)
 
     // State colors
     private val success = Color(0x05F140)

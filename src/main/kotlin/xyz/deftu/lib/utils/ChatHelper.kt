@@ -6,7 +6,7 @@ import xyz.deftu.lib.DeftuLib
 
 object ChatHelper {
     @JvmStatic
-    fun sendClientMessage(message: Text, prefix: String = DeftuLib.PREFIX) {
+    fun sendClientMessage(message: Text, prefix: String = DeftuLib.prefix) {
         val text = TextHelper.createLiteralText("")
         text.append(TextHelper.createLiteralText(prefix))
         text.append(message)
@@ -14,5 +14,5 @@ object ChatHelper {
     }
 
     @JvmStatic
-    fun sendClientMessage(message: String, prefix: String = DeftuLib.PREFIX) = sendClientMessage(TextHelper.createLiteralText(message), prefix)
+    fun sendClientMessage(message: String, prefix: String = DeftuLib.prefix) = sendClientMessage(TextHelper.createLiteralText(message), prefix)
 }

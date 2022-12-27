@@ -1,5 +1,6 @@
 package xyz.deftu.lib.client.gui.context
 
+import gg.essential.elementa.components.ScrollComponent
 import gg.essential.elementa.components.UIBlock
 import gg.essential.elementa.components.UIContainer
 import gg.essential.elementa.components.UIText
@@ -12,8 +13,12 @@ import gg.essential.elementa.state.toConstraint
 import xyz.deftu.lib.client.gui.DeftuPalette
 
 internal class ContextMenuItemComponent(
-    item: ContextMenuItem
+    internal val item: ContextMenuItem
 ) : UIContainer() {
+    companion object {
+        val HEIGHT = 20.pixels
+    }
+
     private val colorState = BasicState(DeftuPalette.getBackground())
     private val textColorState = BasicState(DeftuPalette.getText())
 
@@ -32,11 +37,14 @@ internal class ContextMenuItemComponent(
         color = textColorState.toConstraint()
     } childOf textContainer
 
+    private val contextMenu: ContextMenuComponent?
+        get() = (((parent as? UIContainer)?.parent as? ScrollComponent)?.parent as? UIBlock)?.parent as? ContextMenuComponent
+
     init {
         constrain {
             y = SiblingConstraint()
             width = 100.percent
-            height = 20.pixels
+            height = HEIGHT
         }.onMouseEnter {
             if (!item.enabled) return@onMouseEnter
 
@@ -74,6 +82,9 @@ internal class ContextMenuItemComponent(
             } else {
                 hide(true)
             }
+
+            contextMenu?.updateHeight()
+            contextMenu?.checkVisibility()
         }
     }
 }

@@ -9,13 +9,10 @@ object ContextMenu {
     @JvmStatic
     fun create(
         xPos: Float,
-        yPos: Float,
-        vararg item: ContextMenuItem
+        yPos: Float
     ) = ContextMenuComponent().constrain {
         x = xPos.pixels
         y = yPos.pixels
-    }.apply {
-        item.forEach(::addItem)
     }
 
     @JvmStatic

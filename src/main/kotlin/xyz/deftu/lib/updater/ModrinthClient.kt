@@ -6,7 +6,6 @@ import com.google.gson.stream.JsonWriter
 import kotlinx.coroutines.delay
 import net.minecraft.SharedConstants
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import xyz.deftu.lib.DeftuLib
@@ -15,7 +14,7 @@ import java.io.FileInputStream
 import java.security.MessageDigest
 
 internal class ModrinthClient {
-    private val gson = DeftuLib.GSON.newBuilder()
+    private val gson = DeftuLib.gson.newBuilder()
         .registerTypeAdapter(ModrinthVersionType::class.java, ModrinthVersionType.Adapter())
         .create()
 
@@ -32,7 +31,7 @@ internal class ModrinthClient {
 
         lastRequest = currentTime
 
-        val response = DeftuLib.HTTP_CLIENT.newCall(
+        val response = DeftuLib.httpClient.newCall(
             Request.Builder()
                 .post(constructBody().toRequestBody("application/json".toMediaType()))
                 .url("https://api.modrinth.com/v2/version_file/${createSha1(file)}/update?algorithm=sha1")

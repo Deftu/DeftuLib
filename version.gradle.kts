@@ -44,7 +44,7 @@ dependencies {
     }}")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.8.2+kotlin.1.7.10")
 
-    modImplementation("dev.isxander:yet-another-config-lib:1.6.0")
+    modImplementation("dev.isxander:yet-another-config-lib:2.1.1")
 
     api(include("com.squareup.okhttp3:okhttp:${libs.versions.okhttp.get()}")!!)
     api(include("com.squareup.okio:okio:${libs.versions.okio.get()}")!!)

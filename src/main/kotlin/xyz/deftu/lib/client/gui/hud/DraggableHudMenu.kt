@@ -9,6 +9,7 @@ import gg.essential.elementa.components.Window
 import gg.essential.elementa.constraints.ChildBasedSizeConstraint
 import gg.essential.elementa.dsl.*
 import gg.essential.universal.UKeyboard
+import gg.essential.universal.UMatrixStack
 import xyz.deftu.lib.DeftuLib
 import xyz.deftu.lib.client.gui.context.ContextMenu
 import xyz.deftu.lib.client.gui.context.ContextMenuComponent
@@ -61,6 +62,7 @@ open class DraggableHudMenu(
             component.onWindowResize()
         }
 
+        println("Namespaces: ${hudWindow.getNamespaces()}")
         hudWindow.getNamespaces().map(Map.Entry<String, HudContainer>::value).toList().forEach { container ->
             container.getHudChildren().forEach { component ->
                 cachedConstraints[component] = component.constraints
@@ -119,19 +121,18 @@ open class DraggableHudMenu(
         }
     }
 
-    open fun getDefaultContextMenuItems(component: HudComponent) = emptyList<ContextMenuItem>()
+    open fun getDefaultContextMenuItems(component: HudComponent) = listOf(ContextMenu.item(TextHelper.createTranslatableText("${DeftuLib.ID}.hud.menu.remove")) { item ->
+        component.remove()
+        component.hide(true)
+        item.closeParent()
+    })
+
     open fun displayContextMenu(component: HudComponent, mouseX: Float, mouseY: Float) {
         val contextMenu by ContextMenu.create(
             xPos = mouseX,
-            yPos = mouseY,
-            item = arrayOf(
-                ContextMenu.item(TextHelper.createTranslatableText("${DeftuLib.ID}.hud.menu.remove")) { item ->
-                    component.remove()
-                    component.hide(true)
-                    item.closeParent()
-                }
-            ) + getDefaultContextMenuItems(component).toTypedArray()
+            yPos = mouseY
         ) childOf window
+        contextMenu.addItems(getDefaultContextMenuItems(component))
     }
 
     open fun setupHudComponent(state: State, component: HudComponent) {

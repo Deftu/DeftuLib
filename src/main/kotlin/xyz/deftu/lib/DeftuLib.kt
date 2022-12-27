@@ -21,11 +21,11 @@ object DeftuLib : ModInitializer {
     const val ID = "@MOD_ID@"
 
     @JvmStatic
-    var ENVIRONMENT = EnvType.CLIENT
+    var environment = EnvType.CLIENT
         private set
 
     @JvmStatic
-    val PREFIX = prefix {
+    val prefix = prefix {
         name = NAME
         color = ChatColor.GOLD
         brackets {
@@ -36,10 +36,10 @@ object DeftuLib : ModInitializer {
     }
 
     @JvmStatic
-    val LOGGER = LogManager.getLogger("@MOD_NAME@")
+    val logger = LogManager.getLogger(NAME)
     
     @JvmStatic
-    val GSON by lazy {
+    val gson by lazy {
         GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .setPrettyPrinting()
@@ -48,21 +48,21 @@ object DeftuLib : ModInitializer {
     }
 
     @JvmStatic
-    val EVENT_BUS = bus {
+    val eventBus = bus {
         invoker = LMFInvoker()
         threadSafety = true
         setExceptionHandler { e ->
-            LOGGER.error("Caught exception while handling event", e)
+            logger.error("Caught exception while handling event", e)
         }
     }
 
     @JvmStatic
-    val MULTITHREADER by lazy {
+    val multithreader by lazy {
         Multithreader(35)
     }
 
     @JvmStatic
-    val HTTP_CLIENT by lazy {
+    val httpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor { chain ->
                 chain.proceed(chain.request().newBuilder()
@@ -72,7 +72,7 @@ object DeftuLib : ModInitializer {
     }
 
     @JvmStatic
-    val BROWSER_HTTP_CLIENT by lazy {
+    val browserHttpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor { chain ->
                 chain.proceed(chain.request().newBuilder()
@@ -82,23 +82,15 @@ object DeftuLib : ModInitializer {
     }
 
     @JvmStatic
-    val GSON by lazy {
-        GsonBuilder()
-            .setPrettyPrinting()
-            .setLenient()
-            .create()
-    }
-
-    @JvmStatic
-    val UPDATE_CHECKER by lazy {
+    val updateChecker by lazy {
         UpdateChecker()
     }
 
     override fun onInitialize() {
         DeftuLibConfig.load()
         EnvironmentSetupEvent.EVENT.register { type ->
-            ENVIRONMENT = type
-            UPDATE_CHECKER.start()
+            environment = type
+            updateChecker.start()
         }
     }
 }
