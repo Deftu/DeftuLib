@@ -16,12 +16,6 @@
     "license": "LGPL-3.0",
     "environment": "*",
     "entrypoints": {
-        "preLaunch": [
-            {
-                "adapter": "kotlin",
-                "value": "xyz.deftu.lib.prelaunch.DeftuLibPreLaunch"
-            }
-        ],
         "main": [
             {
                 "adapter": "kotlin",

@@ -11,5 +11,5 @@ public interface MouseInputEvent {
         }
     });
 
-    void onMouseInput(int button, int action, int mods);
+    void onMouseInput(int button, InputAction action, int mods);
 }

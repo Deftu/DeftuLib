@@ -1,4 +1,7 @@
 {
+    "key.categories.deftulib": "DeftuLib",
+    "key.deftulib.player_action": "Player Actions",
+
     "deftulib.update_checker.text": "Version %s of %s is now available. You have %s. It's in the %s channel.",
     "deftulib.update_checker.release": "release",
     "deftulib.update_checker.beta": "beta",
@@ -12,5 +15,8 @@
     "deftulib.config.category.appearance": "Appearance",
 
     "deftulib.config.option.update_checking": "Update Checking",
-    "deftulib.config.option.dark_mode": "Dark Mode"
+    "deftulib.config.option.dark_mode": "Dark Mode",
+
+    "deftulib.error.screen_requires_world": "This screen requires a world to be loaded.",
+    "deftulib.error.no_actions": "No actions available."
 }

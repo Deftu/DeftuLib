@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import xyz.deftu.lib.events.InputAction;
 import xyz.deftu.lib.events.InputEvent;
 import xyz.deftu.lib.events.MouseInputEvent;
 
@@ -20,7 +21,8 @@ public class MouseMixin {
         if (handle != client.getWindow().getHandle())
             return;
 
-        MouseInputEvent.EVENT.invoker().onMouseInput(button, action, mods);
-        InputEvent.EVENT.invoker().onInput(button, action, mods, InputEvent.InputType.MOUSE);
+        InputAction inputAction = InputAction.from(action);
+        MouseInputEvent.EVENT.invoker().onMouseInput(button, inputAction, mods);
+        InputEvent.EVENT.invoker().onInput(handle, button, inputAction, mods, -1, InputEvent.InputType.MOUSE);
     }
 }

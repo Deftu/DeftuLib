@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import xyz.deftu.lib.events.InputAction;
 import xyz.deftu.lib.events.InputEvent;
 import xyz.deftu.lib.events.KeyInputEvent;
 
@@ -20,7 +21,8 @@ public class KeyboardMixin {
         if (handle != client.getWindow().getHandle())
             return;
 
-        KeyInputEvent.EVENT.invoker().onKeyInput(key, scancode, action, mods);
-        InputEvent.EVENT.invoker().onInput(key, action, mods, InputEvent.InputType.KEYBOARD);
+        InputAction inputAction = InputAction.from(action);
+        KeyInputEvent.EVENT.invoker().onKeyInput(key, scancode, inputAction, mods);
+        InputEvent.EVENT.invoker().onInput(handle, key, inputAction, mods, scancode, InputEvent.InputType.KEYBOARD);
     }
 }

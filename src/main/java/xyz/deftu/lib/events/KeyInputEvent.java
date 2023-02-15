@@ -11,5 +11,5 @@ public interface KeyInputEvent {
         }
     });
 
-    void onKeyInput(int key, int scancode, int action, int mods);
+    void onKeyInput(int key, int scancode, InputAction action, int mods);
 }
