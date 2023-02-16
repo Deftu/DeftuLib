@@ -63,7 +63,7 @@ internal object TelemetryTracker {
         this.osVersion = osVersion
         this.osArch = osArch
 
-        if (!UniquenessTracker.isUnique("@MOD_ID@", gameVersion, loaderName, loaderVersion)) {
+        if (!UniquenessTracker.isUnique("@MOD_ID@", "@MOD_VERSION@", gameVersion, loaderName, loaderVersion)) {
             logger.info("Telemetry data already sent for @MOD_NAME@ on this version of Minecraft and this version of $loaderName.")
             return
         }
@@ -85,7 +85,7 @@ internal object TelemetryTracker {
         if (!response.isSuccessful) {
             logger.error("Failed to send telemetry data: ${response.code} ${response.message}")
         } else {
-            UniquenessTracker.setPresent("@MOD_ID@", gameVersion, loaderName, loaderVersion)
+            UniquenessTracker.setPresent("@MOD_ID@", "@MOD_VERSION@", gameVersion, loaderName, loaderVersion)
             logger.info("Successfully sent telemetry data for @MOD_NAME@.")
         }
     }
@@ -94,7 +94,7 @@ internal object TelemetryTracker {
         id: String,
         version: String
     ) {
-        if (!UniquenessTracker.isUnique(id, gameVersion, loaderName, loaderVersion)) {
+        if (!UniquenessTracker.isUnique(id, version, gameVersion, loaderName, loaderVersion)) {
             logger.info("Telemetry data already sent for $id on this version of Minecraft and this version of $loaderName.")
             return
         }
@@ -116,7 +116,7 @@ internal object TelemetryTracker {
         if (!response.isSuccessful) {
             logger.error("Failed to send telemetry data: ${response.code} ${response.message}")
         } else {
-            UniquenessTracker.setPresent(id, gameVersion, loaderName, loaderVersion)
+            UniquenessTracker.setPresent(id, version, gameVersion, loaderName, loaderVersion)
             logger.info("Successfully sent telemetry data for $id.")
         }
     }

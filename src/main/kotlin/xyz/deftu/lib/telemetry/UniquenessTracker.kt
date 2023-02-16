@@ -20,6 +20,7 @@ internal object UniquenessTracker {
 
     fun isUnique(
         modId: String,
+        modVersion: String,
         gameVersion: String,
         loaderName: String,
         loaderVersion: String
@@ -41,12 +42,20 @@ internal object UniquenessTracker {
             return true
         }
 
-        val mods = gameVersionObj.map { it.asString }
-        return !mods.contains(modId)
+        val mods = gameVersionObj.map {
+            if (it.isJsonPrimitive) return true
+
+            val id = it.asJsonObject.get("id")?.asString ?: return true
+            val version = it.asJsonObject.get("version")?.asString ?: return true
+            id to version
+        }
+
+        return mods.none { (id, version) -> id == modId && version == modVersion }
     }
 
     fun setPresent(
         modId: String,
+        modVersion: String,
         gameVersion: String,
         loaderName: String,
         loaderVersion: String
@@ -71,7 +80,20 @@ internal object UniquenessTracker {
             gameVersionObj
         }
 
-        gameVersionObj.add(modId)
+        if (gameVersionObj.map { it.asJsonObject.get("id")?.asString }.contains(modId)) return
+
+        val mod = JsonObject()
+        mod.addProperty("id", modId)
+        mod.addProperty("version", modVersion)
+        gameVersionObj.add(mod)
+
+        // remove all primitives - these are leftovers from versions 1.5.0 and 1.5.1
+        val newGameVersionObj = JsonArray()
+        gameVersionObj.forEach {
+            if (it.isJsonObject) newGameVersionObj.add(it)
+        }
+        loaderVersionObj.add(gameVersion, newGameVersionObj)
+
         file.writeText(obj.toString())
     }
 }

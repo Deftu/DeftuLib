@@ -75,6 +75,8 @@ dependencies {
 }
 
 releases {
+    changelogFile.set(rootProject.file("changelogs/${modData.version}.md"))
+
     modrinth {
         projectId.set("WfhjX9sQ")
         dependencies.set(listOf(

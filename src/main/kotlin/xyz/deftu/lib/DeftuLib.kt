@@ -42,7 +42,7 @@ object DeftuLib : ModInitializer {
 
     @JvmStatic
     val logger = LogManager.getLogger(NAME)
-    
+
     @JvmStatic
     val gson by lazy {
         GsonBuilder()
@@ -140,18 +140,21 @@ object DeftuLib : ModInitializer {
         logger.info(seperator)
         logger.warn("Finished printing information about the current environment.")
 
-        try {
-            // Send it to the telemetry tracker
-            TelemetryTracker.recordPreLaunch(date, gameEnv, gameVersion, loaderName, loaderVersion, javaVersion, javaVendor, osName, osVersion, osArch)
+        // Send telemetry data in a separate thread to not block the game
+        multithreader.runAsync {
+            try {
+                // Send it to the telemetry tracker
+                TelemetryTracker.recordPreLaunch(date, gameEnv, gameVersion, loaderName, loaderVersion, javaVersion, javaVendor, osName, osVersion, osArch)
 
-            // Loop through all loaded mods and track them if they were made by me
-            for (mod in FabricLoader.getInstance().allMods.filter { container ->
-                container.metadata.isDeftuMod() && container.metadata.id != "@MOD_ID@"
-            }) {
-                TelemetryTracker.record(mod.metadata.id, mod.metadata.version.friendlyString)
+                // Loop through all loaded mods and track them if they were made by me
+                for (mod in FabricLoader.getInstance().allMods.filter { container ->
+                    container.metadata.isDeftuMod() && container.metadata.id != "@MOD_ID@"
+                }) {
+                    TelemetryTracker.record(mod.metadata.id, mod.metadata.version.friendlyString)
+                }
+            } catch (e: Exception) {
+                logger.error("Failed to send telemetry data", e)
             }
-        } catch (e: Exception) {
-            logger.error("Failed to send telemetry data", e)
         }
     }
 

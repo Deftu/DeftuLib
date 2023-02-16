@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.minecraft.client.MinecraftClient
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.text.ClickEvent
+import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 import xyz.deftu.lib.DeftuLib
 import xyz.deftu.lib.client.actions.PlayerActionManager
@@ -40,31 +41,40 @@ object DeftuLibClient : ClientModInitializer {
 
         // First-launch message
         if (DeftuLib.firstLaunch) {
-            val firstSection = TextHelper.createLiteralText("")
-                .append(TextHelper.createLiteralText("--").formatted(Formatting.GRAY, Formatting.STRIKETHROUGH))
-                .append(TextHelper.createLiteralText("[").formatted(Formatting.GRAY))
-            val discordSection = TextHelper.createLiteralText("Discord").formatted(Formatting.BLUE)
-                .styled { it.withClickEvent(ClickEvent(ClickEvent.Action.OPEN_URL, "https://shr.deftu.xyz/discord")) }
-            val secondSection = TextHelper.createLiteralText("]")
-                .formatted(Formatting.GRAY)
-                .append(TextHelper.createLiteralText("--").formatted(Formatting.GRAY, Formatting.STRIKETHROUGH))
-                .append(TextHelper.createLiteralText("[")
-                    .formatted(Formatting.GRAY))
-            val githubSection = TextHelper.createLiteralText("GitHub").formatted(Formatting.BLUE)
-                .styled { it.withClickEvent(ClickEvent(ClickEvent.Action.OPEN_URL, "https://shr.deftu.xyz/github")) }
-            val thirdSection = TextHelper.createLiteralText("]")
-                .formatted(Formatting.GRAY)
-                .append(TextHelper.createLiteralText("--").formatted(Formatting.GRAY, Formatting.STRIKETHROUGH))
-
-            val message = TextHelper.createLiteralText("")
-                .append(firstSection)
-                .append(discordSection)
-                .append(secondSection)
-                .append(githubSection)
-                .append(thirdSection)
-
             ClientPlayConnectionEvents.JOIN.register { _, _, _ ->
-                ChatHelper.sendClientMessage(message)
+                val dividerSize = 7
+                ChatHelper.sendClientMessage(TextHelper.createLiteralText("")
+                    .append(TextHelper.createLiteralText("-".repeat(dividerSize)).formatted(Formatting.GRAY, Formatting.STRIKETHROUGH))
+                    .append(TextHelper.createLiteralText(" ${DeftuLib.NAME} ").formatted(Formatting.GOLD))
+                    .append(TextHelper.createLiteralText("-".repeat(dividerSize)).formatted(Formatting.GRAY, Formatting.STRIKETHROUGH)), "")
+                ChatHelper.sendEmptyClientMessage()
+
+                ChatHelper.sendClientMessage(TextHelper.createLiteralText("Thanks for using ").formatted(Formatting.GRAY)
+                    .append(TextHelper.createLiteralText(DeftuLib.NAME).formatted(Formatting.GOLD))
+                    .append(TextHelper.createLiteralText("!").formatted(Formatting.GRAY)), "")
+                ChatHelper.sendClientMessage(TextHelper.createLiteralText("This message is only shown on first launch.").formatted(Formatting.GRAY), "")
+                ChatHelper.sendEmptyClientMessage()
+
+                ChatHelper.sendClientMessage(TextHelper.createLiteralText("You can find ways to contact me below:").formatted(Formatting.GRAY), "")
+                ChatHelper.sendClientMessage(createUrlListText(
+                    "Discord" to "https://shr.deftu.xyz/discord",
+                    "GitHub" to "https://shr.deftu.xyz/github",
+                    "Website" to "https://deftu.xyz"
+                ), "")
+
+                ChatHelper.sendEmptyClientMessage()
+
+                ChatHelper.sendClientMessage(TextHelper.createLiteralText("You can also support me by donating below:").formatted(Formatting.GRAY), "")
+                ChatHelper.sendClientMessage(createUrlListText(
+                    "Ko-Fi" to "https://shr.deftu.xyz/ko-fi",
+                    "PayPal" to "https://shr.deftu.xyz/paypal"
+                ), "")
+
+                ChatHelper.sendEmptyClientMessage()
+                ChatHelper.sendClientMessage(TextHelper.createLiteralText("")
+                    .append(TextHelper.createLiteralText("-".repeat(dividerSize)).formatted(Formatting.GRAY, Formatting.STRIKETHROUGH))
+                    .append(TextHelper.createLiteralText(" ${DeftuLib.NAME} ").formatted(Formatting.GOLD))
+                    .append(TextHelper.createLiteralText("-".repeat(dividerSize)).formatted(Formatting.GRAY, Formatting.STRIKETHROUGH)), "")
             }
         }
 
@@ -74,5 +84,28 @@ object DeftuLibClient : ClientModInitializer {
 
     fun openPlayerActionScreen(player: PlayerEntity) {
         MinecraftClient.getInstance().setScreen(PlayerActionScreen(player))
+    }
+
+    private fun createUrlListText(
+        vararg items: Pair<String, String>
+    ): Text {
+        val message = TextHelper.createLiteralText("")
+
+        items.forEachIndexed { index, (name, url) ->
+            val firstSection = TextHelper.createLiteralText("")
+                .append(if (index == 0) TextHelper.createLiteralText("--").formatted(Formatting.GRAY, Formatting.STRIKETHROUGH) else TextHelper.createLiteralText(""))
+                .append(TextHelper.createLiteralText("[").formatted(Formatting.GRAY))
+            val section = TextHelper.createLiteralText(name).formatted(Formatting.BLUE, Formatting.BOLD)
+                .styled { it.withClickEvent(ClickEvent(ClickEvent.Action.OPEN_URL, url)) }
+            val secondSection = TextHelper.createLiteralText("]")
+                .formatted(Formatting.GRAY)
+                .append(TextHelper.createLiteralText("--").formatted(Formatting.GRAY, Formatting.STRIKETHROUGH))
+
+            message.append(firstSection)
+                .append(section)
+                .append(secondSection)
+        }
+
+        return message
     }
 }

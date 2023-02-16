@@ -15,4 +15,7 @@ object ChatHelper {
 
     @JvmStatic
     fun sendClientMessage(message: String, prefix: String = DeftuLib.prefix) = sendClientMessage(TextHelper.createLiteralText(message), prefix)
+
+    @JvmStatic
+    fun sendEmptyClientMessage() = sendClientMessage("", "")
 }
