@@ -27,19 +27,14 @@ class PlayerActionManager {
             if (keyBinding.matchesKey(button, scancode) || keyBinding.matchesMouse(button)) {
                 if (action != InputAction.PRESS) return@register
 
-                println("Pressed key")
-
                 val player = MinecraftClient.getInstance().player ?: return@register
                 val raycastResult = MinecraftClient.getInstance().crosshairTarget ?: return@register
-                println("Raycast result: $raycastResult")
                 if (raycastResult.type != HitResult.Type.ENTITY) return@register
 
-                println("Raycast result is entity")
                 val hitResult = raycastResult as EntityHitResult
                 val entity = hitResult.entity
                 if (entity !is PlayerEntity || entity == player) return@register
 
-                println("Entity is player")
                 DeftuLibClient.openPlayerActionScreen(entity)
             }
         }

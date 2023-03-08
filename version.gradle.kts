@@ -43,7 +43,7 @@ dependencies {
         11902 -> "4.0.6"
         else -> throw IllegalStateException("Invalid MC version: ${mcData.version}")
     }}")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.9.1+kotlin.1.8.10")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.7.4+kotlin.1.6.21")
 
     api(include("com.squareup.okio:okio:${libs.versions.okio.get()}")!!)
     api(include("com.squareup.okio:okio-jvm:${libs.versions.okio.get()}")!!)
@@ -75,7 +75,8 @@ dependencies {
 }
 
 releases {
-    changelogFile.set(rootProject.file("changelogs/${modData.version}.md"))
+    val log = rootProject.file("changelogs/${modData.version}.md")
+    if (log.exists()) changelogFile.set(log)
 
     modrinth {
         projectId.set("WfhjX9sQ")
@@ -105,32 +106,5 @@ tasks {
 
     remapJar {
         archiveBaseName.set("${modData.name}-${mcData.versionStr}")
-    }
-}
-
-publishing {
-    repositories {
-        mavenLocal()
-        if (project.hasProperty("deftu.publishing.username") && project.hasProperty("deftu.publishing.password")) {
-            fun MavenArtifactRepository.applyCredentials() {
-                authentication.create<BasicAuthentication>("basic")
-                credentials {
-                    username = property("deftu.publishing.username")?.toString()
-                    password = property("deftu.publishing.password")?.toString()
-                }
-            }
-
-            maven {
-                name = "DeftuReleases"
-                url = uri("https://maven.deftu.xyz/releases")
-                applyCredentials()
-            }
-
-            maven {
-                name = "DeftuSnapshots"
-                url = uri("https://maven.deftu.xyz/snapshots")
-                applyCredentials()
-            }
-        }
     }
 }
