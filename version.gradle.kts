@@ -39,8 +39,9 @@ dependencies {
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:${mcData.fabricApiVersion}")
     modImplementation("com.terraformersmc:modmenu:${when (mcData.version) {
-        11903 -> "5.0.2"
-        11902 -> "4.0.6"
+        11904 -> "6.1.0-rc.4"
+        11903 -> "5.1.0-beta.4"
+        11902 -> "4.1.2"
         else -> throw IllegalStateException("Invalid MC version: ${mcData.version}")
     }}")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.7.4+kotlin.1.6.21")
@@ -56,6 +57,7 @@ dependencies {
     }.get()).excludeVitals())
     modApi(include(libs.versions.elementa.map {
         "gg.essential:elementa-${when (mcData.version) {
+            11904 -> "1.18.1-fabric"
             11903 -> "1.18.1-fabric"
             11902 -> "1.18.1-fabric"
             else -> "${mcData.versionStr}-${mcData.loader.name}"
@@ -63,6 +65,7 @@ dependencies {
     }.get()).excludeVitals())
     include(modImplementation(libs.versions.vigilance.map {
         "gg.essential:vigilance-${when (mcData.version) {
+            11904 -> "1.18.1-fabric"
             11903 -> "1.18.1-fabric"
             11902 -> "1.18.1-fabric"
             else -> "${mcData.versionStr}-${mcData.loader.name}"

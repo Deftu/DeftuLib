@@ -1,6 +1,7 @@
 package xyz.deftu.lib.telemetry
 
 import com.google.gson.JsonObject
+import net.fabricmc.loader.api.FabricLoader
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -33,7 +34,7 @@ internal object TelemetryTracker {
     private lateinit var osVersion: String
     private lateinit var osArch: String
 
-    fun recordPreLaunch(
+    internal fun recordPreLaunch(
         date: OffsetDateTime,
         environment: String,
         gameVersion: String,
@@ -63,6 +64,8 @@ internal object TelemetryTracker {
         this.osVersion = osVersion
         this.osArch = osArch
 
+        if (FabricLoader.getInstance().isDevelopmentEnvironment) return
+
         if (!UniquenessTracker.isUnique("@MOD_ID@", "@MOD_VERSION@", gameVersion, loaderName, loaderVersion)) {
             logger.info("Telemetry data already sent for @MOD_NAME@ on this version of Minecraft and this version of $loaderName.")
             return
@@ -90,10 +93,12 @@ internal object TelemetryTracker {
         }
     }
 
-    fun record(
+    internal fun record(
         id: String,
         version: String
     ) {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment) return
+
         if (!UniquenessTracker.isUnique(id, version, gameVersion, loaderName, loaderVersion)) {
             logger.info("Telemetry data already sent for $id on this version of Minecraft and this version of $loaderName.")
             return
