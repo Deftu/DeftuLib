@@ -10,3 +10,21 @@ preprocess {
     fabric11904.link(fabric11903)
     fabric11903.link(fabric11902)
 }
+
+listOf(
+    "DeftuReleasesRepository",
+    "DeftuSnapshotsRepository"
+).forEach { repository ->
+    listOf(
+        "1.19.4-fabric",
+        "1.19.3-fabric",
+        "1.19.2-fabric"
+    ).forEach { version ->
+        project(":$version").tasks.register("fullReleaseWith$repository") {
+            group = "deftu"
+
+            dependsOn(":$version:publishAllPublicationsTo$repository")
+            dependsOn(":$version:releaseProject")
+        }
+    }
+}
