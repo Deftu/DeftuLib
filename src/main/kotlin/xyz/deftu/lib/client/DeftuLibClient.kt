@@ -3,17 +3,26 @@ package xyz.deftu.lib.client
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.api.EnvType
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.screen.GameMenuScreen
+import net.minecraft.client.gui.screen.TitleScreen
+import net.minecraft.client.gui.widget.ButtonWidget
+import net.minecraft.client.gui.widget.ClickableWidget
+import net.minecraft.client.gui.widget.TexturedButtonWidget
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.text.ClickEvent
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 import xyz.deftu.lib.DeftuLib
+import xyz.deftu.lib.DeftuLibConfig
 import xyz.deftu.lib.client.actions.PlayerActionManager
 import xyz.deftu.lib.client.gui.actions.PlayerActionScreen
+import xyz.deftu.lib.client.gui.helpmeplease.HelpMePleaseScreen
 import xyz.deftu.lib.client.hud.DraggableHudWindow
 import xyz.deftu.lib.client.hud.HudWindow
 import xyz.deftu.lib.events.EnvironmentSetupEvent
+import xyz.deftu.lib.mixins.client.ScreenMixin
 import xyz.deftu.lib.utils.ChatHelper
 import xyz.deftu.lib.utils.TextHelper
 
@@ -75,6 +84,39 @@ object DeftuLibClient : ClientModInitializer {
                     .append(TextHelper.createLiteralText("-".repeat(dividerSize)).formatted(Formatting.GRAY, Formatting.STRIKETHROUGH))
                     .append(TextHelper.createLiteralText(" ${DeftuLib.NAME} ").formatted(Formatting.GOLD))
                     .append(TextHelper.createLiteralText("-".repeat(dividerSize)).formatted(Formatting.GRAY, Formatting.STRIKETHROUGH)), "")
+            }
+        }
+
+        ScreenEvents.AFTER_INIT.register { client, screen, scaledWidth, scaledHeight ->
+            if (!DeftuLibConfig.hideMainMenuButton && (screen is TitleScreen || screen is GameMenuScreen)) {
+                val text = "Deftu Needs Help!"
+                val xPos = 5
+                val yPos = 5
+                val width = client.textRenderer.getWidth(text) + 10
+                val height = 20
+                val textObj = TextHelper.createLiteralText(text).formatted(Formatting.RED)
+                val pressAction = { widget: ButtonWidget ->
+                    client.setScreen(HelpMePleaseScreen())
+                }
+
+                val button =
+                    //#if MC<11903
+                    //$$ ButtonWidget(
+                    //$$     xPos,
+                    //$$     yPos,
+                    //$$     width,
+                    //$$     height,
+                    //$$     textObj,
+                    //$$     pressAction
+                    //$$ )
+                    //#else
+                    ButtonWidget.builder(textObj, pressAction)
+                        .position(xPos, yPos)
+                        .size(width, height)
+                        .build()
+                    //#endif
+
+                (screen as ScreenMixin).callAddDrawableChild(button)
             }
         }
 

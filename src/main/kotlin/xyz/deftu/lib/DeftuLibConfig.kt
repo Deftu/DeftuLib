@@ -47,6 +47,12 @@ object DeftuLibConfig : Vigilant(
         category = "General",
         hidden = true
     ) var firstLaunch = true
+    @JvmStatic
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Hide Main Menu Button",
+        category = "General"
+    ) var hideMainMenuButton = false
 
     @JvmStatic
     @Property(
