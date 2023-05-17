@@ -89,12 +89,12 @@ object DeftuLibClient : ClientModInitializer {
 
         ScreenEvents.AFTER_INIT.register { client, screen, scaledWidth, scaledHeight ->
             if (!DeftuLibConfig.hideMainMenuButton && (screen is TitleScreen || screen is GameMenuScreen)) {
-                val text = "Deftu Needs Help!"
+                val text = "Deftu really needs your help!"
+                val textObj = TextHelper.createLiteralText(text).formatted(Formatting.RED, Formatting.BOLD)
                 val xPos = 5
                 val yPos = 5
-                val width = client.textRenderer.getWidth(text) + 10
+                val width = client.textRenderer.getWidth(textObj) + 10
                 val height = 20
-                val textObj = TextHelper.createLiteralText(text).formatted(Formatting.RED)
                 val pressAction = { widget: ButtonWidget ->
                     client.setScreen(HelpMePleaseScreen())
                 }

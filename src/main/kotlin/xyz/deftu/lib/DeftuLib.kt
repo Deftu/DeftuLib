@@ -16,7 +16,6 @@ import xyz.deftu.lib.utils.ChatPrefixType
 import xyz.deftu.lib.utils.prefix
 import xyz.deftu.enhancedeventbus.bus
 import xyz.deftu.enhancedeventbus.invokers.LMFInvoker
-import xyz.deftu.lib.telemetry.TelemetryTracker
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
@@ -139,23 +138,6 @@ object DeftuLib : ModInitializer {
         lines.forEach(logger::info)
         logger.info(seperator)
         logger.warn("Finished printing information about the current environment.")
-
-        // Send telemetry data in a separate thread to not block the game
-        multithreader.runAsync {
-            try {
-                // Send it to the telemetry tracker
-                TelemetryTracker.recordPreLaunch(date, gameEnv, gameVersion, loaderName, loaderVersion, javaVersion, javaVendor, osName, osVersion, osArch)
-
-                // Loop through all loaded mods and track them if they were made by me
-                for (mod in FabricLoader.getInstance().allMods.filter { container ->
-                    container.metadata.isDeftuMod() && container.metadata.id != "@MOD_ID@"
-                }) {
-                    TelemetryTracker.record(mod.metadata.id, mod.metadata.version.friendlyString)
-                }
-            } catch (e: Exception) {
-                logger.error("Failed to send telemetry data", e)
-            }
-        }
     }
 
     private fun isUsingQuilt() = try {

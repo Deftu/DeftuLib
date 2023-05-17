@@ -155,16 +155,15 @@ class HelpMePleaseScreen : UScreen(
     }
 
     val text = """
-            |I'm a 17-year-old developer who's been working on Minecraft mods for 4 years now. This has been a very big passion of mine the entire time.
-            |Despite my push to make the best mods I can, I've been struggling to keep up with the costs of running them.
-            |Not only has it been difficult maintaining the quality of my mods, but I've also been struggling with keeping myself afloat in my real life.
-            |I've been working hard to be able to support myself financially and move out of my parents' house, but it hasn't been a very steady process.
-            |My parents have traumatized me for years, and I've been trying to get away from them for a long time.
-            |Dealing with them has been a very big stressor in my life. Living in a third-world, poverty-stricken and corrupt country has also been a very big limiting factor in my ability to make quality content.
-            |I've been working on a lot of new mods, and I've been very excited to release them, but I've been struggling to keep up with the needs of actively developing them without a stable internet connection or access to electricity.
-            |Below are buttons you can click to support me - Join my Discord server, buy me a coffee, or donate to me via PayPal.
+            |I'm a 17-year-old developer who's been working on Minecraft mods for 4 years now. This has been a passion of mine for a long time.
+            |Despite my push to do the best I can, I've been struggling to keep myself afloat financially.
+            |I've been working hard to be able to support myself and move out of my problematic parents' house, but it hasn't been a very steady process.
+            |My parents have caused severe damage against me my entire life.
+            |Dealing with them has been a very big stressor. Living in a third-world, poverty-stricken and corrupt country has been a very big limiting factor in my ability to function and make good products.
+            |I've been struggling to keep up with the needs of actively developing innovative and unique experiences without a stable internet connection or access to electricity.
+            |Below are buttons you can click to support me by joining my Discord server, or donating to me through Ko-Fi or PayPal.
             |Thank you for reading this, and thank you for using my mods.
-        """.trimMargin()
+        """.trimMargin().replace('\n', ' ')
     lateinit var modListWidget: TextListWidget
 
     private var guiScale = -1
@@ -180,11 +179,6 @@ class HelpMePleaseScreen : UScreen(
             textRenderer.fontHeight
         )
         addDrawable(modListWidget)
-
-        // Buttons (in the layout as follows):
-        // - Discord (https://discord.gg/xmFBstnw9W)
-        // - Ko-Fi (https://ko-fi.com/deftu) + PayPal (https://paypal.me/matthewtgm)
-        // - Hide + Close
 
         // Discord
         addDrawableChild(createButton(
@@ -296,9 +290,12 @@ class HelpMePleaseScreen : UScreen(
         val listTitleColor = ChatColor.GRAY
         val listTitleX = width / 2f - textRenderer.getWidth(listTitleText) / 2f
         val listTitleY = currentSubtitleY + textRenderer.fontHeight
-        textRenderer.draw(stack, "$listTitleColor$listTitleText", listTitleX, listTitleY, 0xFFFFFF)
 
-        modListWidget.setTopPosition((listTitleY + textRenderer.fontHeight + 10).toInt())
+        val topButtonBottom = height - 50
+        if (listTitleY < topButtonBottom) {
+            modListWidget.setTopPosition((listTitleY + textRenderer.fontHeight + 10).toInt())
+            textRenderer.draw(stack, "$listTitleColor$listTitleText", listTitleX, listTitleY, 0xFFFFFF)
+        } else remove(modListWidget)
     }
 
     private fun gatherMods(): List<TextListEntry> {
