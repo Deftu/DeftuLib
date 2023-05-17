@@ -1,0 +1,22 @@
+{
+    "key.categories.deftulib": "DeftuLib",
+    "key.deftulib.player_action": "Ações do Jogador",
+
+    "deftulib.update_checker.text": "A versão %s de %s já está disponível. Você tem a versão %s. Está no canal %s.",
+    "deftulib.update_checker.release": "release",
+    "deftulib.update_checker.beta": "beta",
+    "deftulib.update_checker.alpha": "alpha",
+
+    "deftulib.hud.menu.remove": "Remover",
+
+    "deftulib.config.title": "DeftuLib",
+
+    "deftulib.config.category.general": "Geral",
+    "deftulib.config.category.appearance": "Aparência",
+
+    "deftulib.config.option.update_checking": "Verificação de atualização",
+    "deftulib.config.option.dark_mode": "Modo Escuro",
+
+    "deftulib.error.screen_requires_world": "Esta tela requer um mundo para ser carregado.",
+    "deftulib.error.no_actions": "Nenhuma ação disponível."
+}
