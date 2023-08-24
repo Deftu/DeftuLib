@@ -26,7 +26,7 @@ pluginManagement {
         kotlin("jvm") version(kotlin)
         kotlin("plugin.serialization") version(kotlin)
 
-        val dgt = "1.10.1"
+        val dgt = "1.18.5"
         id("xyz.deftu.gradle.multiversion-root") version(dgt)
     }
 }

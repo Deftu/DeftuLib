@@ -77,7 +77,7 @@ dependencies {
     implementation(include("com.github.ben-manes.caffeine:caffeine:${libs.versions.caffeine.get()}")!!)
 }
 
-releases {
+toolkitReleases {
     val log = rootProject.file("changelogs/${modData.version}.md")
     if (log.exists()) changelogFile.set(log)
 
