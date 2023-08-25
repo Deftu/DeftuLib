@@ -20,6 +20,8 @@ listOf(
     "DeftuSnapshotsRepository"
 ).forEach { repository ->
     listOf(
+        "1.20.1-fabric",
+        "1.20-fabric",
         "1.19.4-fabric",
         "1.19.3-fabric",
         "1.19.2-fabric"
@@ -28,7 +30,7 @@ listOf(
             group = "deftu"
 
             dependsOn(":$version:publishAllPublicationsTo$repository")
-            dependsOn(":$version:releaseProject")
+            dependsOn(":$version:publishMod")
         }
     }
 }
