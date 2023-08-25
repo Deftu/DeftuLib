@@ -27,8 +27,12 @@ open class DraggableHudWindow {
     fun initialize() {
         if (initialized) return
 
-        HudRenderCallback.EVENT.register { stack, _ ->
-            window.draw(UMatrixStack(stack))
+        HudRenderCallback.EVENT.register { ctx, _ ->
+            //#if MC >= 1.20
+            window.draw(UMatrixStack(ctx.matrices))
+            //#else
+            //$$ window.draw(UMatrixStack(ctx))
+            //#endif
         }
 
         initialized = true
