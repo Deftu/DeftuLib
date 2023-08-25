@@ -12,6 +12,7 @@ plugins {
     id("xyz.deftu.gradle.multiversion")
     id("xyz.deftu.gradle.tools")
     id("xyz.deftu.gradle.tools.blossom")
+    id("xyz.deftu.gradle.tools.maven-publishing")
     id("xyz.deftu.gradle.tools.minecraft.loom")
     id("xyz.deftu.gradle.tools.minecraft.releases")
 }
@@ -38,33 +39,33 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:${mcData.fabricApiVersion}")
-    modImplementation("com.terraformersmc:modmenu:${when (mcData.version) {
-        11904 -> "6.1.0-rc.4"
-        11903 -> "5.1.0-beta.4"
-        11902 -> "4.1.2"
-        else -> throw IllegalStateException("Invalid MC version: ${mcData.version}")
-    }}")
+    modImplementation(mcData.modMenuDependency)
     modImplementation("net.fabricmc:fabric-language-kotlin:1.7.4+kotlin.1.6.21")
 
     api(include("com.squareup.okio:okio:${libs.versions.okio.get()}")!!)
     api(include("com.squareup.okio:okio-jvm:${libs.versions.okio.get()}")!!)
     api(include("com.squareup.okhttp3:okhttp:${libs.versions.okhttp.get()}")!!)
-    modApi(include(libs.versions.universalcraft.map {
+
+    include(modApi(libs.versions.universalcraft.map {
         "gg.essential:universalcraft-${when (mcData.version) {
             11902 -> "1.19.1-fabric"
             else -> "${mcData.versionStr}-${mcData.loader.name}"
         }}:$it"
     }.get()).excludeVitals())
-    modApi(include(libs.versions.elementa.map {
+    include(modApi(libs.versions.elementa.map {
         "gg.essential:elementa-${when (mcData.version) {
+            12001 -> "1.18.1-fabric"
+            12000 -> "1.18.1-fabric"
             11904 -> "1.18.1-fabric"
             11903 -> "1.18.1-fabric"
             11902 -> "1.18.1-fabric"
             else -> "${mcData.versionStr}-${mcData.loader.name}"
         }}:$it"
     }.get()).excludeVitals())
-    include(modImplementation(libs.versions.vigilance.map {
+    include(modApi(libs.versions.vigilance.map {
         "gg.essential:vigilance-${when (mcData.version) {
+            12001 -> "1.18.1-fabric"
+            12000 -> "1.18.1-fabric"
             11904 -> "1.18.1-fabric"
             11903 -> "1.18.1-fabric"
             11902 -> "1.18.1-fabric"
@@ -90,24 +91,12 @@ toolkitReleases {
         ))
     }
 
-    curseforge {
-        projectId.set("695205")
-        relations.set(listOf(
-            CurseRelation("fabric-api", CurseRelationType.REQUIRED),                // Fabric API
-            CurseRelation("fabric-language-kotlin", CurseRelationType.REQUIRED),    // Fabric Language Kotlin
-            CurseRelation("modmenu", CurseRelationType.OPTIONAL)                    // Mod Menu
-        ))
-    }
-}
-
-tasks {
-    withType<KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs += "-Xjvm-default=enable"
-        }
-    }
-
-    remapJar {
-        archiveBaseName.set("${modData.name}-${mcData.versionStr}")
-    }
+//    curseforge {
+//        projectId.set("695205")
+//        relations.set(listOf(
+//            CurseRelation("fabric-api", CurseRelationType.REQUIRED),                // Fabric API
+//            CurseRelation("fabric-language-kotlin", CurseRelationType.REQUIRED),    // Fabric Language Kotlin
+//            CurseRelation("modmenu", CurseRelationType.OPTIONAL)                    // Mod Menu
+//        ))
+//    }
 }

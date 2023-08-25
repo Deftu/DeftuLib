@@ -22,11 +22,11 @@ pluginManagement {
     }
 
     plugins {
-        val kotlin = "1.6.21"
+        val kotlin = "1.9.0"
         kotlin("jvm") version(kotlin)
         kotlin("plugin.serialization") version(kotlin)
 
-        val dgt = "1.18.5"
+        val dgt = "1.19.1"
         id("xyz.deftu.gradle.multiversion-root") version(dgt)
     }
 }
