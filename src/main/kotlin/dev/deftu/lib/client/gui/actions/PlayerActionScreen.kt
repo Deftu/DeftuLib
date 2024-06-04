@@ -118,7 +118,7 @@ class PlayerActionScreen(
             val columnIndex = index / 5
             val column = columnBlocks[columnIndex]
 
-            val button by UIBlock(DeftuPalette.getBackground4()).constrain {
+            val button by UIBlock(DeftuPalette.getBackground2()).constrain {
                 y = SiblingConstraint()
                 height = ChildBasedSizeConstraint() + 10.pixels
             } effect OutlineEffect(

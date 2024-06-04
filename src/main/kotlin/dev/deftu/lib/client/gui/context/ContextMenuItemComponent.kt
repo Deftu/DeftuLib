@@ -62,15 +62,15 @@ internal class ContextMenuItemComponent(
         }
 
         if (!item.enabled) {
-            colorState.set(if (colorState.get() != DeftuPalette.getBackground3()) colorState.get() else DeftuPalette.getBackground3())
+            colorState.set(if (colorState.get() != DeftuPalette.getBackground2()) colorState.get() else DeftuPalette.getBackground2())
             textColorState.set(if (textColorState.get() != DeftuPalette.getTextDisabled()) textColorState.get() else DeftuPalette.getTextDisabled())
         }
 
         item.addEnableChangeListener { value ->
             colorState.set(if (value) {
-                if (colorState.get() != DeftuPalette.getBackground3()) colorState.get()
+                if (colorState.get() != DeftuPalette.getBackground2()) colorState.get()
                 else DeftuPalette.getBackground()
-            } else DeftuPalette.getBackground3())
+            } else DeftuPalette.getBackground2())
 
             textColorState.set(if (value) {
                 if (textColorState.get() != DeftuPalette.getTextDisabled()) textColorState.get()
