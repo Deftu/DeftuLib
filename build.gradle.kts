@@ -2,6 +2,7 @@ import com.modrinth.minotaur.dependencies.DependencyType
 import com.modrinth.minotaur.dependencies.ModDependency
 import dev.deftu.gradle.tools.minecraft.CurseRelation
 import dev.deftu.gradle.tools.minecraft.CurseRelationType
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     java
@@ -47,13 +48,13 @@ dependencies {
     api(include("com.squareup.okio:okio-jvm:${libs.versions.okio.get()}")!!)
     api(include("com.squareup.okhttp3:okhttp:${libs.versions.okhttp.get()}")!!)
 
-    include(modApi(libs.versions.universalcraft.map {
+    modApi(include(libs.versions.universalcraft.map {
         "gg.essential:universalcraft-${when (mcData.version) {
             1_18_02 -> "1.18.1-fabric"
             else -> "${mcData.versionStr}-${mcData.loader.name}"
         }}:$it"
     }.get()).excludeVitals())
-    include(modApi(libs.versions.elementa.map {
+    modApi(include(libs.versions.elementa.map {
         "gg.essential:elementa-${when (mcData.version) {
             1_20_06, 1_20_04, 1_20_02,
             1_20_01, 1_19_04, 1_19_02,
@@ -61,7 +62,7 @@ dependencies {
             else -> "${mcData.versionStr}-${mcData.loader.name}"
         }}:$it"
     }.get()).excludeVitals())
-    include(modApi(libs.versions.vigilance.map {
+    modApi(include(libs.versions.vigilance.map {
         "gg.essential:vigilance-${when (mcData.version) {
             1_20_06, 1_20_04, 1_20_02,
             1_20_01, 1_19_04, 1_19_02,
@@ -94,5 +95,27 @@ toolkitReleases {
             CurseRelation("fabric-language-kotlin", CurseRelationType.REQUIRED),    // Fabric Language Kotlin
             CurseRelation("modmenu", CurseRelationType.OPTIONAL)                    // Mod Menu
         ))
+    }
+}
+
+tasks {
+    java {
+        targetCompatibility = mcData.javaVersion
+        sourceCompatibility = mcData.javaVersion
+    }
+
+    compileJava {
+        val javaVer = if (mcData.javaVersion.ordinal in 9 downTo 1) "1.${mcData.javaVersion.majorVersion}" else mcData.javaVersion.majorVersion
+        targetCompatibility = javaVer
+        sourceCompatibility = javaVer
+
+        options.release.set(mcData.javaVersion.majorVersion.toInt())
+    }
+
+    compileKotlin {
+        kotlinOptions {
+            val javaVer = if (mcData.javaVersion.ordinal in 9 downTo 1) "1.${mcData.javaVersion.majorVersion}" else mcData.javaVersion.majorVersion
+            jvmTarget = javaVer
+        }
     }
 }
