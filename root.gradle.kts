@@ -48,6 +48,12 @@ listOf(
         }
     }
 
+    project.tasks.register("publishAllPublicationsTo$repository") {
+        group = "deftu"
+
+        dependsOn(versions.map { ":$it:publishAllPublicationsTo$repository" })
+    }
+
     project.tasks.register("fullReleaseWith$repository") {
         group = "deftu"
 
