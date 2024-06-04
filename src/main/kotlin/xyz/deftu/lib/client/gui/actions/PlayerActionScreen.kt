@@ -14,12 +14,12 @@ import gg.essential.universal.UMouse
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.Mouse
 import net.minecraft.entity.player.PlayerEntity
-import xyz.deftu.deftils.Multithreader
 import xyz.deftu.lib.DeftuLib
 import xyz.deftu.lib.client.DeftuLibClient
 import xyz.deftu.lib.client.actions.PlayerAction
 import xyz.deftu.lib.client.gui.DeftuPalette
 import xyz.deftu.lib.utils.ChatHelper
+import xyz.deftu.lib.utils.Multithreader
 import xyz.deftu.lib.utils.TextHelper
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit

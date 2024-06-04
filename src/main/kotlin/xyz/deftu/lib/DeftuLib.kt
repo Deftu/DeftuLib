@@ -9,13 +9,13 @@ import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.metadata.ModMetadata
 import okhttp3.OkHttpClient
 import org.apache.logging.log4j.LogManager
-import xyz.deftu.deftils.Multithreader
 import xyz.deftu.lib.events.EnvironmentSetupEvent
 import xyz.deftu.lib.updater.UpdateChecker
 import xyz.deftu.lib.utils.ChatPrefixType
 import xyz.deftu.lib.utils.prefix
 import xyz.deftu.enhancedeventbus.bus
 import xyz.deftu.enhancedeventbus.invokers.LMFInvoker
+import xyz.deftu.lib.utils.Multithreader
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 

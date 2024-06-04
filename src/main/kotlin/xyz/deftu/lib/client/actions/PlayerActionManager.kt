@@ -24,7 +24,13 @@ class PlayerActionManager {
 
         KeyBindingHelper.registerKeyBinding(keyBinding)
         InputEvent.EVENT.register { handle, button, action, mods, scancode, type ->
-            if (keyBinding.matchesKey(button, scancode) || keyBinding.matchesMouse(button)) {
+            if (
+                MinecraftClient.getInstance().currentScreen == null &&
+                (
+                    keyBinding.matchesKey(button, scancode) ||
+                    keyBinding.matchesMouse(button)
+                )
+            ) {
                 if (action != InputAction.PRESS) return@register
 
                 val player = MinecraftClient.getInstance().player ?: return@register

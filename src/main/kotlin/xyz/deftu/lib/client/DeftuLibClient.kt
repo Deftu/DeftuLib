@@ -57,17 +57,18 @@ object DeftuLibClient : ClientModInitializer {
 
                 ChatHelper.sendClientMessage(TextHelper.createLiteralText("You can find ways to contact me below:").formatted(Formatting.GRAY), "")
                 ChatHelper.sendClientMessage(createUrlListText(
-                    "Discord" to "https://shr.deftu.xyz/discord",
-                    "GitHub" to "https://shr.deftu.xyz/github",
-                    "Website" to "https://deftu.xyz"
+                    "Discord" to "https://s.deftu.dev/discord",
+                    "GitHub" to "https://s.deftu.dev/github",
+                    "Website" to "https://deftu.dev"
                 ), "")
 
                 ChatHelper.sendEmptyClientMessage()
 
-                ChatHelper.sendClientMessage(TextHelper.createLiteralText("You can also support me by donating below:").formatted(Formatting.GRAY), "")
+                ChatHelper.sendClientMessage(TextHelper.createLiteralText("You can also support me by clicking the links below:").formatted(Formatting.GRAY), "")
                 ChatHelper.sendClientMessage(createUrlListText(
-                    "Ko-Fi" to "https://shr.deftu.xyz/ko-fi",
-                    "PayPal" to "https://shr.deftu.xyz/paypal"
+                    "Ko-Fi" to "https://s.deftu.dev/kofi",
+                    "PayPal" to "https://s.deftu.dev/paypal",
+                    "BisectHosting" to "https://bisecthosting.com/deftu"
                 ), "")
 
                 ChatHelper.sendEmptyClientMessage()
