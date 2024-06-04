@@ -2,7 +2,6 @@ import com.modrinth.minotaur.dependencies.DependencyType
 import com.modrinth.minotaur.dependencies.ModDependency
 import dev.deftu.gradle.tools.minecraft.CurseRelation
 import dev.deftu.gradle.tools.minecraft.CurseRelationType
-import dev.deftu.gradle.utils.propertyOr
 
 plugins {
     java
@@ -49,7 +48,10 @@ dependencies {
     api(include("com.squareup.okhttp3:okhttp:${libs.versions.okhttp.get()}")!!)
 
     include(modApi(libs.versions.universalcraft.map {
-        "gg.essential:universalcraft-${mcData.versionStr}-${mcData.loader.name}:$it"
+        "gg.essential:universalcraft-${when (mcData.version) {
+            1_18_02 -> "1.18.1-fabric"
+            else -> "${mcData.versionStr}-${mcData.loader.name}"
+        }}:$it"
     }.get()).excludeVitals())
     include(modApi(libs.versions.elementa.map {
         "gg.essential:elementa-${when (mcData.version) {
