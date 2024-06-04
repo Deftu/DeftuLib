@@ -12,9 +12,7 @@ import gg.essential.elementa.effects.OutlineEffect
 import gg.essential.elementa.state.BasicState
 import gg.essential.universal.UMouse
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.Mouse
 import net.minecraft.entity.player.PlayerEntity
-import dev.deftu.lib.DeftuLib
 import dev.deftu.lib.client.DeftuLibClient
 import dev.deftu.lib.client.actions.PlayerAction
 import dev.deftu.lib.client.gui.DeftuPalette
@@ -27,7 +25,7 @@ import java.util.concurrent.TimeUnit
 class PlayerActionScreen(
     val player: PlayerEntity
 ) : WindowScreen(
-    version = ElementaVersion.V2,
+    version = ElementaVersion.V5,
     drawDefaultBackground = false,
     restoreCurrentGuiOnClose = true
 ) {

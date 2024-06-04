@@ -24,7 +24,7 @@ class PlayerActionManager {
         if (initialized) return
 
         KeyBindingHelper.registerKeyBinding(keyBinding)
-        InputEvent.EVENT.register { handle, button, action, mods, scancode, type ->
+        InputEvent.EVENT.register { _, button, action, _, scancode, _ ->
             if (
                 MinecraftClient.getInstance().currentScreen == null &&
                 (

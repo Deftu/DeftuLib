@@ -48,6 +48,7 @@ class UpdateChecker {
                     val version = VersionParser.parseSemantic(modrinthVersion.versionNumber) ?: return@forEach
                     val currentVersion = VersionParser.parseSemantic(container.metadata.version.friendlyString) ?: return@forEach
 
+                    @Suppress("DEPRECATION")
                     if (version > currentVersion) {
                         updates.add(Update(container.metadata, modrinthVersion))
                     }

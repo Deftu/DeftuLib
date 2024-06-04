@@ -6,7 +6,7 @@ import dev.deftu.lib.DeftuLibConfig
 
 class ModMenuIntegration : ModMenuApi {
 
-    override fun getModConfigScreenFactory() = ConfigScreenFactory { parent ->
+    override fun getModConfigScreenFactory() = ConfigScreenFactory { _ ->
         DeftuLibConfig.gui()
     }
 

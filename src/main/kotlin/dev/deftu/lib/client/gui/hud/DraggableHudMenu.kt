@@ -9,23 +9,20 @@ import gg.essential.elementa.components.Window
 import gg.essential.elementa.constraints.ChildBasedSizeConstraint
 import gg.essential.elementa.dsl.*
 import gg.essential.universal.UKeyboard
-import gg.essential.universal.UMatrixStack
-import dev.deftu.lib.DeftuLib
 import dev.deftu.lib.client.gui.context.ContextMenu
-import dev.deftu.lib.client.gui.context.ContextMenuComponent
-import dev.deftu.lib.client.gui.context.ContextMenuItem
 import dev.deftu.lib.client.hud.DraggableHudWindow
 import dev.deftu.lib.client.hud.HudComponent
 import dev.deftu.lib.client.hud.HudContainer
 import dev.deftu.lib.utils.TextHelper
 
 open class DraggableHudMenu(
-    val hudWindow: DraggableHudWindow,
+    @Suppress("MemberVisibilityCanBePrivate") val hudWindow: DraggableHudWindow,
     restoreCurrentGuiOnClose: Boolean = true
 ) : WindowScreen(
-    version = ElementaVersion.V2,
+    version = ElementaVersion.V5,
     restoreCurrentGuiOnClose = restoreCurrentGuiOnClose
 ) {
+
     // Options
     private var defaultContextMenu = true
 
@@ -34,6 +31,7 @@ open class DraggableHudMenu(
     private var draggingOffset = 0f to 0f
     private var cachedConstraints = mutableMapOf<UIComponent, UIConstraints>()
 
+    @Suppress("MemberVisibilityCanBePrivate")
     val container by UIContainer().constrain {
         width = 100.percent
         height = 100.percent
@@ -54,6 +52,7 @@ open class DraggableHudMenu(
         refresh()
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun refresh() {
         container.clearChildren()
 
@@ -66,7 +65,7 @@ open class DraggableHudMenu(
         hudWindow.getNamespaces().map(Map.Entry<String, HudContainer>::value).toList().forEach { container ->
             container.getHudChildren().forEach { component ->
                 cachedConstraints[component] = component.constraints
-                val container = HudContainer().constrain {
+                val hudContainer = HudContainer().constrain {
                     width = ChildBasedSizeConstraint()
                     height = ChildBasedSizeConstraint()
                 } childOf this.container
@@ -105,8 +104,8 @@ open class DraggableHudMenu(
                         UKeyboard.KEY_LEFT -> move(component, component.getLeft() - 1, component.getTop())
                         UKeyboard.KEY_RIGHT -> move(component, component.getLeft() + 1, component.getTop())
                     }
-                } childOf container
-                container.constrain {
+                } childOf hudContainer
+                hudContainer.constrain {
                     x = component.constraints.x
                     y = component.constraints.y
                 }
@@ -138,6 +137,7 @@ open class DraggableHudMenu(
     open fun setupHudComponent(state: State, component: HudComponent) {
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun UIComponent.isHudComponent(): Boolean {
         var parent = this.parent
         while (true) {

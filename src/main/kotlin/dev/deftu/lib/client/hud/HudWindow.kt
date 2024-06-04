@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 
 open class HudWindow {
 
-    val window = Window(ElementaVersion.V2)
+    val window = Window(ElementaVersion.V5)
     private var initialized = false
 
     fun initialize() {
