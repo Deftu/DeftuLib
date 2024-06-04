@@ -19,25 +19,25 @@
         "main": [
             {
                 "adapter": "kotlin",
-                "value": "xyz.deftu.lib.DeftuLib"
+                "value": "dev.deftu.lib.DeftuLib"
             }
         ],
         "client": [
             {
                 "adapter": "kotlin",
-                "value": "xyz.deftu.lib.client.DeftuLibClient"
+                "value": "dev.deftu.lib.client.DeftuLibClient"
             }
         ],
         "server": [
             {
                 "adapter": "kotlin",
-                "value": "xyz.deftu.lib.server.DeftuLibServer"
+                "value": "dev.deftu.lib.server.DeftuLibServer"
             }
         ],
         "modmenu": [
             {
                 "adapter": "kotlin",
-                "value": "xyz.deftu.lib.utils.ModMenuIntegration"
+                "value": "dev.deftu.lib.utils.ModMenuIntegration"
             }
         ]
     },
