@@ -2,19 +2,18 @@ package dev.deftu.lib
 
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
+import dev.deftu.eventbus.bus
+import dev.deftu.eventbus.invokers.LMFInvoker
 import dev.deftu.lib.events.EnvironmentSetupEvent
 import gg.essential.universal.ChatColor
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.loader.api.FabricLoader
-import net.fabricmc.loader.api.metadata.ModMetadata
 import okhttp3.OkHttpClient
 import org.apache.logging.log4j.LogManager
 import dev.deftu.lib.updater.UpdateChecker
 import dev.deftu.lib.utils.ChatPrefixType
 import dev.deftu.lib.utils.prefix
-import xyz.deftu.enhancedeventbus.bus
-import xyz.deftu.enhancedeventbus.invokers.LMFInvoker
 import dev.deftu.lib.utils.Multithreader
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter

@@ -47,6 +47,8 @@ dependencies {
     api(include("com.squareup.okio:okio:${libs.versions.okio.get()}")!!)
     api(include("com.squareup.okio:okio-jvm:${libs.versions.okio.get()}")!!)
     api(include("com.squareup.okhttp3:okhttp:${libs.versions.okhttp.get()}")!!)
+    api(include("dev.deftu:enhancedeventbus:${libs.versions.enhancedeventbus.get()}")!!)
+    api(include("com.github.ben-manes.caffeine:caffeine:${libs.versions.caffeine.get()}")!!)
 
     modApi(include(libs.versions.universalcraft.map {
         "gg.essential:universalcraft-${when (mcData.version) {
@@ -70,9 +72,6 @@ dependencies {
             else -> "${mcData.versionStr}-${mcData.loader.name}"
         }}:$it"
     }.get()).excludeVitals())
-
-    implementation(include("xyz.deftu:enhancedeventbus:${libs.versions.enhancedeventbus.get()}")!!)
-    implementation(include("com.github.ben-manes.caffeine:caffeine:${libs.versions.caffeine.get()}")!!)
 }
 
 toolkitReleases {
