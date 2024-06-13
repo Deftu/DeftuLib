@@ -12,7 +12,7 @@ plugins {
     id("dev.deftu.gradle.multiversion")
     id("dev.deftu.gradle.tools")
     id("dev.deftu.gradle.tools.resources")
-    id("dev.deftu.gradle.tools.blossom")
+    id("dev.deftu.gradle.tools.bloom")
     id("dev.deftu.gradle.tools.maven-publishing")
     id("dev.deftu.gradle.tools.minecraft.loom")
     id("dev.deftu.gradle.tools.minecraft.releases")
@@ -56,17 +56,17 @@ dependencies {
     }.get()).excludeVitals())
     modApi(include(libs.versions.elementa.map {
         "gg.essential:elementa-${when (mcData.version) {
-            1_20_06, 1_20_04, 1_20_02,
-            1_20_01, 1_19_04, 1_19_02,
-            1_18_02 -> "1.18.1-fabric"
+            1_21_00, 1_20_06, 1_20_04,
+            1_20_02, 1_20_01, 1_19_04,
+            1_19_02, 1_18_02 -> "1.18.1-fabric"
             else -> "${mcData.versionStr}-${mcData.loader.name}"
         }}:$it"
     }.get()).excludeVitals())
     modApi(include(libs.versions.vigilance.map {
         "gg.essential:vigilance-${when (mcData.version) {
-            1_20_06, 1_20_04, 1_20_02,
-            1_20_01, 1_19_04, 1_19_02,
-            1_18_02 -> "1.18.1-fabric"
+            1_21_00, 1_20_06, 1_20_04,
+            1_20_02, 1_20_01, 1_19_04,
+            1_19_02, 1_18_02 -> "1.18.1-fabric"
             else -> "${mcData.versionStr}-${mcData.loader.name}"
         }}:$it"
     }.get()).excludeVitals())
@@ -95,27 +95,5 @@ toolkitReleases {
             CurseRelation("fabric-language-kotlin", CurseRelationType.REQUIRED),    // Fabric Language Kotlin
             CurseRelation("modmenu", CurseRelationType.OPTIONAL)                    // Mod Menu
         ))
-    }
-}
-
-tasks {
-    java {
-        targetCompatibility = mcData.javaVersion
-        sourceCompatibility = mcData.javaVersion
-    }
-
-    compileJava {
-        val javaVer = if (mcData.javaVersion.ordinal in 9 downTo 1) "1.${mcData.javaVersion.majorVersion}" else mcData.javaVersion.majorVersion
-        targetCompatibility = javaVer
-        sourceCompatibility = javaVer
-
-        options.release.set(mcData.javaVersion.majorVersion.toInt())
-    }
-
-    compileKotlin {
-        kotlinOptions {
-            val javaVer = if (mcData.javaVersion.ordinal in 9 downTo 1) "1.${mcData.javaVersion.majorVersion}" else mcData.javaVersion.majorVersion
-            jvmTarget = javaVer
-        }
     }
 }
