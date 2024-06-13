@@ -22,7 +22,7 @@ object TextHelper {
     @JvmStatic
     fun createTranslatableText(key: String, vararg args: Any): MutableText {
         //#if MC >= 1.19.2
-        return Text.translatable(key, args)
+        return Text.translatable(key, *args)
         //#else
         //$$ return TranslatableText(key, *args)
         //#endif
